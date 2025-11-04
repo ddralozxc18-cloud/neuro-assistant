@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>НейроПомощник</title>
+    <script src="scr.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles2.css">
+    <link rel="icon" href="ChatGPT Image 27 сент. 2025 г., 12_07_11.png" type="image/x-icon">
+</head>
+<body>
+
+<script>
+// Обработка примеров промптов - перенаправление в чат
+document.addEventListener('DOMContentLoaded', function() {
+    const examplePrompts = document.querySelectorAll('.example-prompts span');
+    const promptInput = document.getElementById('heroPrompt');
+    
+    examplePrompts.forEach(prompt => {
+        prompt.addEventListener('click', () => {
+            const promptText = prompt.textContent;
+            window.location.href = `assistent.html?prompt=${encodeURIComponent(promptText)}`;
+        });
+    });
+
+    // Кнопка генерации в герое
+    document.getElementById('heroGenerateBtn').addEventListener('click', () => {
+        if (promptInput.value.trim() !== '') {
+            window.location.href = `assistent.html?prompt=${encodeURIComponent(promptInput.value)}`;
+        } else {
+            alert('Пожалуйста, введите запрос или выберите пример');
+        }
+    });
+
+    // Адаптация для мобильных - улучшение UX
+    if (window.innerWidth <= 768) {
+        // Увеличиваем область клика для примеров промптов
+        examplePrompts.forEach(prompt => {
+            prompt.style.padding = '0.8rem 1rem';
+            prompt.style.margin = '0.2rem 0';
+        });
+        
+        // Улучшаем поле ввода для мобильных
+        if (promptInput) {
+            promptInput.style.fontSize = '16px'; // Предотвращает zoom на iOS
+        }
+    }
+});
+</script>
+
+    <!-- Навигация -->
+    <nav>
+        <div class="logo"><img src="ChatGPT Image 27 сент. 2025 г., 12_07_11.png" class="logo"> НейроПомощник</div>
+        <div class="nav-links">
+            <a href="#features">Возможности</a>
+            <a href="#how-it-works">Как работает</a>
+            <a href="#why-us">Преимущества</a>
+        </div>
+        <div class="version">
+            <span>v. 0.00.01 (Пре-альфа)</span>
+        </div>
+    </nav>
+
+    <!-- Герой секция -->
+    <section class="hero">
+        <canvas class="neural-bg" id="neuralNetwork"></canvas>
+        <div class="hero-content">
+            <h1>НейроПомощник</h1>
+            <p class="hero-subtitle">Интеллектуальный ассистент, который помогает находить ответы, решать задачи и разбираться в сложных темах</p>
+            
+            <div class="prompt-box">
+                <div class="prompt-input">
+                    <input type="text" placeholder="Опишите, что вас интересует..." id="heroPrompt">
+                    <button id="heroGenerateBtn">Найти ответ <i class="fas fa-bolt"></i></button>
+                </div>
+                <!-- <div class="example-prompts">
+                    <span>Объясни квантовую физику простыми словами</span>
+                    <span>Помоги решить математическую задачу</span>
+                    <span>Напиши план для изучения Python</span>
+                </div> -->
+            </div>
+            
+            <div class="usage-stats">
+                <p><i class="fas fa-graduation-cap"></i> Упрости себе учёбу с НейроПомощником!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Как это работает -->
+    <section class="how-it-works" id="how-it-works">
+        <h2 class="section-title">Как работает НейроПомощник</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-icon">
+                    <i class="fas fa-keyboard"></i>
+                </div>
+                <h3>Задайте вопрос</h3>
+                <p>Опишите свою задачу на естественном языке. Чем подробнее вопрос, тем точнее будет ответ.</p>
+            </div>
+            <div class="step">
+                <div class="step-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>AI анализирует</h3>
+                <p>Нейросеть обрабатывает запрос и находит оптимальное решение используя передовые алгоритмы.</p>
+            </div>
+            <div class="step">
+                <div class="step-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h3>Получите ответ</h3>
+                <p>Четкий, структурированный ответ с объяснениями и рекомендациями по вашей теме.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Возможности -->
+    <section class="features" id="features">
+        <h2 class="section-title">Возможности НейроПомощника</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3>Поиск и анализ</h3>
+                <p>Найдет и проанализирует любую информацию, предоставит точные ответы на самые сложные вопросы.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-calculator"></i>
+                </div>
+                <h3>Решение задач</h3>
+                <p>Поможет рассчитать, спланировать и оптимизировать решения для любых проектов и заданий.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3>Обучение и поддержка</h3>
+                <p>Создаст план саморазвития, поможет с подготовкой к экзаменам и рабочими проектами.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Преимущества -->
+    <section class="why-us" id="why-us">
+        <h2 class="section-title">Почему выбирают НейроПомощник</h2>
+        <div class="advantages">
+            <div class="advantage">
+                <div class="advantage-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="advantage-content">
+                    <h3>Мгновенные ответы</h3>
+                    <p>Получайте решения за секунды без долгого ожидания и поиска информации</p>
+                </div>
+            </div>
+            <div class="advantage">
+                <div class="advantage-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="advantage-content">
+                    <h3>Точность и надежность</h3>
+                    <p>Актуальная информация из проверенных источников с указанием ссылок</p>
+                </div>
+            </div>
+            <div class="advantage">
+                <div class="advantage-icon">
+                    <i class="fas fa-infinity"></i>
+                </div>
+                <div class="advantage-content">
+                    <h3>Неограниченные вопросы</h3>
+                    <p>Задавайте столько вопросов, сколько нужно - без лимитов и ограничений</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA секция -->
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Готовы упростить свою учебу?</h2>
+            <p>Стань частью студентов, которые уже используют НейроПомощник.</p>
+            <a href="assistent.html" class="cta-button">
+                Попробовать НейроПомощник <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="footer-logo">НейроПомощник</div>
+                <p>Интеллектуальный помощник для студентов и учащихся</p>
+            </div>
+            <div class="footer-info">
+                <h4>Проект Драло Дмитрия Михайловича</h4>
+                <p>Студент ДГТУ</p>
+                <div class="footer-meta">
+                    <span>Версия 0.00.01 (Пре-альфа)</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Нейронная сеть на canvas
+        const canvas = document.getElementById('neuralNetwork');
+        const ctx = canvas.getContext('2d');
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        // Создание нейронов и связей
+        const neurons = [];
+        const connections = [];
+        const neuronCount = 40;
+        
+        // Создание нейронов
+        for (let i = 0; i < neuronCount; i++) {
+            neurons.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: (Math.random() - 0.5) * 0.3,
+                radius: Math.random() * 1.5 + 0.5,
+                pulse: Math.random() * Math.PI * 2
+            });
+        }
+        
+        // Создание связей между близкими нейронами
+        for (let i = 0; i < neurons.length; i++) {
+            for (let j = i + 1; j < neurons.length; j++) {
+                const dx = neurons[i].x - neurons[j].x;
+                const dy = neurons[i].y - neurons[j].y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < 120) {
+                    connections.push({
+                        from: i,
+                        to: j,
+                        opacity: (120 - distance) / 120 * 0.2
+                    });
+                }
+            }
+        }
+        
+        // Анимация
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Обновление позиций нейронов
+            neurons.forEach(neuron => {
+                neuron.x += neuron.vx;
+                neuron.y += neuron.vy;
+                neuron.pulse += 0.03;
+                
+                // Отскок от границ
+                if (neuron.x < 0 || neuron.x > canvas.width) neuron.vx *= -1;
+                if (neuron.y < 0 || neuron.y > canvas.height) neuron.vy *= -1;
+                
+                // Отрисовка нейронов
+                const pulseSize = Math.sin(neuron.pulse) * 0.3 + 1;
+                ctx.beginPath();
+                ctx.arc(neuron.x, neuron.y, neuron.radius * pulseSize, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(116, 51, 191, ${0.4 + Math.sin(neuron.pulse) * 0.2})`;
+                ctx.fill();
+            });
+            
+            // Отрисовка связей
+            connections.forEach(conn => {
+                const from = neurons[conn.from];
+                const to = neurons[conn.to];
+                
+                ctx.beginPath();
+                ctx.moveTo(from.x, from.y);
+                ctx.lineTo(to.x, to.y);
+                ctx.strokeStyle = `rgba(116, 51, 191, ${conn.opacity})`;
+                ctx.lineWidth = 0.3;
+                ctx.stroke();
+            });
+            
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+
+        // Обработка примеров промптов
+        const examplePrompts = document.querySelectorAll('.example-prompts span');
+        const promptInput = document.getElementById('heroPrompt');
+        
+        examplePrompts.forEach(prompt => {
+            prompt.addEventListener('click', () => {
+                promptInput.value = prompt.textContent;
+            });
+        });
+
+        // Кнопка генерации в герое
+        document.getElementById('heroGenerateBtn').addEventListener('click', () => {
+            if (promptInput.value.trim() !== '') {
+                // Перенаправляем в чат с промптом
+                window.location.href = `assistent.html?prompt=${encodeURIComponent(promptInput.value)}`;
+            } else {
+                alert('Пожалуйста, введите запрос или выберите пример');
+            }
+        });
+
+        // Плавная прокрутка
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
