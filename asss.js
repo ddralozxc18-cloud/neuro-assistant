@@ -295,6 +295,27 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Обработчик для новой кнопки скрепки (внутри поля ввода)
+    const attachButton = document.getElementById('attachButton');
+    if (attachButton) {
+        attachButton.addEventListener('click', function() {
+            // Логика для загрузки файла (такая же как у .file-hint)
+            console.log('Добавить файл clicked (новая кнопка)');
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.style.display = 'none';
+            fileInput.addEventListener('change', function(e) {
+                if (this.files.length > 0) {
+                    console.log('Выбран файл:', this.files[0].name);
+                    // Можно добавить отображение имени файла или его предпросмотр
+                }
+            });
+            document.body.appendChild(fileInput);
+            fileInput.click();
+            document.body.removeChild(fileInput);
+        });
+    }
+
     // Если есть промпт из URL, автоматически отправляем его
     if (initialPrompt) {
         setTimeout(() => {
