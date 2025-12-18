@@ -115,14 +115,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1500 + Math.random() * 1000);
     }
     
-    // Add message to chat
+    // Add message to chat (ИСПРАВЛЕННАЯ ФУНКЦИЯ - БЕЗ АВАТАРКИ ПОЛЬЗОВАТЕЛЯ)
     function addMessage(text, isUser) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
-        
-        const avatar = isUser ? 
-            '<div class="avatar user-avatar"><i class="fas fa-user"></i></div>' :
-            '<div class="avatar bot-avatar"><i class="fas fa-brain"></i></div>';
         
         const messageContent = `
             <div class="message-content">
@@ -130,9 +126,10 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         
+        // Для пользователя - только текст, для бота - аватарка + текст
         messageDiv.innerHTML = isUser ? 
-            `${messageContent}${avatar}` : 
-            `${avatar}${messageContent}`;
+            messageContent : 
+            `<div class="avatar bot-avatar"><i class="fas fa-brain"></i></div>${messageContent}`;
         
         messagesContainer.appendChild(messageDiv);
         scrollToBottom();
