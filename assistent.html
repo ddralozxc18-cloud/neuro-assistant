@@ -33,21 +33,22 @@
         <div class="sidebar" id="sidebar">
             <div class="logo">
                 <div class="logo-icon"><img src="ChatGPT Image 27 сент. 2025 г., 12_07_11.png" class="logo2"></div>
-                <div class="logo-text">НейроПомощник</div>
             </div>
 
-             <button class="new-chat-btn" > <!-- data-tooltip="Новый чат" -->
-                <i class="fas fa-plus"></i>
-                <span>Новый чат</span>
-            </button>
+                <button class="new-chat-btn" > <!-- data-tooltip="Новый чат" -->
+                    <!-- <span class="new-btn1"> -->
+                    <i class="fas fa-plus"></i>
+                    <span>Новый чат</span>
+                    <!-- </span> -->
+                </button>
 
             <hr class="hrhr">
 
             <!-- Кнопка сворачивания в самом низу sidebar -->
             <div class="sidebar-bottom">
-                <button class="toggle-sidebar" id="toggleSidebar">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
+                    <button class="toggle-sidebar" id="toggleSidebar">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
             </div>
         </div>
 
@@ -55,7 +56,7 @@
         <div class="main" id="main">
             <div class="chat-header">
                 <div class="chat-title">Чат с НейроПомощником</div>
-                <div class="version">
+                <div class="qse"> <!-- class="version" -->
                     <span>v. 0.00.01 (Пре-альфа)</span>
                 </div>
             </div>
@@ -66,57 +67,32 @@
 
             <!-- Input Area -->
             <div class="input-area">
-                <div class="input-container">
-                    <textarea 
-                        class="message-input" 
-                        placeholder="Введите ваше сообщение..." 
-                        id="messageInput"
-                        rows="1"
-                    ></textarea>
-                    <button class="send-button" id="sendButton">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </div>
-
-
-
-
-                <!-- <div class="input-hints">
-                    <div class="hint file-hint" data-action="file">
-                        <i class="fas fa-paperclip"></i>
-                        <span class="hint-text">Добавить файл</span>
-                    </div>
-                    <div class="hint thought-hint" data-action="thoughtful" title="более точный ответ">
-                        <i class="fas fa-brain"></i>
-                        <span class="hint-text">Вдумчиво</span>
-                    </div>
-                    <div class="hint internet-hint" data-action="internet">
-                        <i class="fas fa-globe"></i>
-                        <span class="hint-text">В интернете</span>
-                    </div>
-                </div> -->
-
-
-
-
-
-<div class="input-hints">
-    <div class="hint file-hint" data-action="file">
-        <i class="fas fa-paperclip"></i>
-        <span class="hint-text">Добавить файл</span>
+    <div class="input-container">
+        <!-- Кнопка скрепки слева -->
+        <button class="attach-button" id="attachButton" type="button">
+            <i class="fas fa-paperclip"></i>
+        </button>
+        
+        <textarea 
+            class="message-input" 
+            placeholder="Введите ваше сообщение..." 
+            id="messageInput"
+            rows="1"
+        ></textarea>
+        
+        <!-- <button class="send-button" id="sendButton">
+            <i class="fas fa-paper-plane"></i>
+        </button> -->
+        <button class="send-button" id="sendButton">
+            <i class="fas fa-arrow-up"></i>
+        </button>
     </div>
-    <!-- <div class="hint thought-hint" data-action="thoughtful" title="более точный ответ">
-        <i class="fas fa-brain"></i>
-        <span class="hint-text">Вдумчиво</span>
+    
+    <!-- Остальные хинты можно оставить или убрать -->
+    <div class="input-hints" style="display: none;"> <!-- скрываем остальные хинты -->
+        <!-- другие хинты... -->
     </div>
-    <div class="hint internet-hint" data-action="internet">
-        <i class="fas fa-globe"></i>
-        <span class="hint-text">В интернете</span>
-    </div> -->
 </div>
-
-
-            </div>
         </div>
     </div>
 </body>
