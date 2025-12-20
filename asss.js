@@ -347,3 +347,112 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Элементы меню
+const menuToggleBtn = document.getElementById('menuToggleBtn');
+const dropdownMenu = document.getElementById('dropdownMenu');
+const menuOverlay = document.getElementById('menuOverlay');
+const menuItems = document.querySelectorAll('.menu-item');
+
+// Переменная для отслеживания состояния меню
+let isMenuOpen = false;
+
+// Функция открытия/закрытия меню
+function toggleMenu() {
+    isMenuOpen = !isMenuOpen;
+    dropdownMenu.classList.toggle('active');
+    
+    // На мобильных устройствах показываем оверлей
+    if (window.innerWidth <= 768) {
+        menuOverlay.classList.toggle('active');
+    }
+}
+
+// Функция закрытия меню
+function closeMenu() {
+    isMenuOpen = false;
+    dropdownMenu.classList.remove('active');
+    menuOverlay.classList.remove('active');
+}
+
+// Обработчики событий
+if (menuToggleBtn) {
+    menuToggleBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleMenu();
+    });
+}
+
+// Закрытие меню при клике на оверлей
+if (menuOverlay) {
+    menuOverlay.addEventListener('click', closeMenu);
+}
+
+// Закрытие меню при клике на пункт меню
+menuItems.forEach(item => {
+    item.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const action = this.getAttribute('data-action');
+        
+        // Выполняем действие в зависимости от выбранного пункта
+        handleMenuAction(action);
+        
+        // Закрываем меню
+        closeMenu();
+    });
+});
+
+// Закрытие меню при клике вне его области
+document.addEventListener('click', function(e) {
+    if (isMenuOpen && !dropdownMenu.contains(e.target) && !menuToggleBtn.contains(e.target)) {
+        closeMenu();
+    }
+});
+
+// Обработка действий меню
+function handleMenuAction(action) {
+    switch(action) {
+        case 'thoughtful':
+            // Режим "Вдумчиво"
+            showNotification('Режим "Вдумчиво" активирован');
+            // Здесь можно добавить логику для изменения поведения ИИ
+            console.log('Режим "Вдумчиво" активирован');
+            break;
+            
+        case 'internet':
+            // Режим "Интернет"
+            showNotification('Режим "Интернет" активирован');
+            // Здесь можно добавить логику для поиска в интернете
+            console.log('Режим "Интернет" активирован');
+            break;
+            
+        case 'settings':
+            // Открытие настроек
+            showNotification('Настройки открыты');
+            // Здесь можно добавить открытие модального окна настроек
+            console.log('Настройки открыты');
+            break;
+    }
+}
+
+
+// Закрытие меню при изменении размера окна
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // На десктопе скрываем оверлей
+        menuOverlay.classList.remove('active');
+    }
+});
