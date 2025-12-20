@@ -79,21 +79,48 @@
             id="messageInput"
             rows="1"
         ></textarea>
-        
+
+        <!-- <div class="menu-container"> -->
+            <button class="menu-toggle-btn" id="menuToggleBtn">
+                <i class="fas fa-ellipsis-h"></i>
+            </button>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <button class="menu-item" data-action="thoughtful">
+                    <i class="fas fa-brain"></i>
+                    <span>Вдумчиво</span>
+                </button>
+                <div class="menu-divider"></div>
+                <button class="menu-item" data-action="internet">
+                    <i class="fas fa-wifi"></i>
+                    <span>Поиск</span>
+                </button>
+                
+            </div>
+        <!-- </div> -->
+
         <!-- <button class="send-button" id="sendButton">
             <i class="fas fa-paper-plane"></i>
         </button> -->
         <button class="send-button" id="sendButton">
             <i class="fas fa-arrow-up"></i>
         </button>
+
+
+        
+        <!-- Оверлей для мобильных (скрыт на десктопе) -->
+        <!-- <div class="menu-overlay" id="menuOverlay"></div> -->
+
     </div>
     
+
+
+
     <!-- Остальные хинты можно оставить или убрать -->
     <div class="input-hints" style="display: none;"> <!-- скрываем остальные хинты -->
         <!-- другие хинты... -->
     </div>
     <div class="rxc">
-        <p class="pAI">Сгенерировано искусственным интеллектом. Может содержать ошибки. Требует проверки.</p>
+        <p class="pAI">Сгенерировано ИИ. Может содержать ошибки. Требует проверки.</p>
     </div>
 </div>
         </div>
