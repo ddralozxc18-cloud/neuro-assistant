@@ -823,3 +823,10 @@ footer {
         width: 0;
     }
 }
+
+.qsea {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: var(--gray);
+}
