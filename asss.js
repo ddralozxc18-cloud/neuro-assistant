@@ -16,6 +16,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const sidebarOverlay = document.getElementById('sidebarOverlay');
     const mobileHeader = document.getElementById('mobileHeader');
 
+    // Элементы меню (перемещены внутрь DOMContentLoaded)
+    const menuToggleBtn = document.getElementById('menuToggleBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+    const menuOverlay = document.getElementById('menuOverlay');
+    const menuItems = document.querySelectorAll('.menu-item');
+
     // Функция переключения боковой панели (десктоп)
     function toggleSidebar() {
         sidebar.classList.toggle('collapsed');
@@ -313,6 +319,177 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // =========== ЛОГИКА МЕНЮ С ИКОНКАМИ ===========
+    
+    // Проверяем, существует ли кнопка меню
+    if (menuToggleBtn) {
+        const menuIcon = menuToggleBtn.querySelector('i');
+        
+        // Состояние меню и выбранного режима
+        let isMenuOpen = false;
+        let selectedMode = null; // 'thoughtful', 'internet', или null
+        
+        // Иконки для разных состояний
+        const icons = {
+            ellipsis: 'fas fa-ellipsis-h',
+            thoughtful: 'fas fa-brain',
+            internet: 'fas fa-wifi',
+            close: 'fas fa-times'
+        };
+        
+        // Функция смены иконки
+        function updateMenuIcon() {
+            if (isMenuOpen) {
+                // Если меню открыто, показываем три точки
+                menuIcon.className = icons.ellipsis;
+            } else if (selectedMode) {
+                // Если меню закрыто и выбран режим, показываем его иконку
+                menuIcon.className = icons[selectedMode];
+            } else {
+                // По умолчанию - три точки
+                menuIcon.className = icons.ellipsis;
+            }
+            
+            // Добавляем/убираем класс для hover эффекта
+            menuToggleBtn.classList.toggle('has-selection', selectedMode !== null);
+        }
+        
+        // Функция открытия/закрытия меню
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (dropdownMenu) {
+                dropdownMenu.classList.toggle('active');
+            }
+            
+            // На мобильных устройствах показываем оверлей
+            if (window.innerWidth <= 768 && menuOverlay) {
+                menuOverlay.classList.toggle('active');
+            }
+            
+            updateMenuIcon();
+        }
+        
+        // Функция закрытия меню
+        function closeMenu() {
+            isMenuOpen = false;
+            if (dropdownMenu) {
+                dropdownMenu.classList.remove('active');
+            }
+            if (menuOverlay) {
+                menuOverlay.classList.remove('active');
+            }
+            updateMenuIcon();
+        }
+        
+        // Обработчики событий для кнопки меню
+        menuToggleBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
+            // Если уже есть выбранный режим и меню закрыто, сбрасываем его
+            if (selectedMode && !isMenuOpen) {
+                selectedMode = null;
+                updateMenuIcon();
+                showNotification('Режим сброшен');
+                console.log('Режим сброшен');
+                return;
+            }
+            
+            toggleMenu();
+        });
+        
+        // Обработчик hover для смены иконки на крестик
+        menuToggleBtn.addEventListener('mouseenter', function() {
+            if (selectedMode && !isMenuOpen) {
+                menuIcon.className = icons.close;
+            }
+        });
+        
+        menuToggleBtn.addEventListener('mouseleave', function() {
+            if (selectedMode && !isMenuOpen) {
+                menuIcon.className = icons[selectedMode];
+            }
+        });
+        
+        // Для мобильных устройств используем touch события
+        menuToggleBtn.addEventListener('touchstart', function() {
+            if (selectedMode && !isMenuOpen) {
+                menuIcon.className = icons.close;
+            }
+        });
+        
+        // Закрытие меню при клике на оверлей
+        if (menuOverlay) {
+            menuOverlay.addEventListener('click', closeMenu);
+        }
+        
+        // Закрытие меню при клике на пункт меню
+        if (menuItems.length > 0) {
+            menuItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const action = this.getAttribute('data-action');
+                    
+                    // Выполняем действие в зависимости от выбранного пункта
+                    handleMenuAction(action);
+                    
+                    // Устанавливаем выбранный режим
+                    if (action === 'thoughtful' || action === 'internet') {
+                        selectedMode = action;
+                    }
+                    
+                    // Закрываем меню
+                    closeMenu();
+                });
+            });
+        }
+        
+        // Обработка действий меню
+        function handleMenuAction(action) {
+            switch(action) {
+                case 'thoughtful':
+                    // Режим "Вдумчиво"
+                    showNotification('Режим "Вдумчиво" активирован');
+                    console.log('Режим "Вдумчиво" активирован');
+                    break;
+                    
+                case 'internet':
+                    // Режим "Поиск"
+                    showNotification('Режим "Поиск" активирован');
+                    console.log('Режим "Поиск" активирован');
+                    break;
+            }
+        }
+        
+        // Функция показа уведомления (упрощенная версия)
+        function showNotification(message) {
+            console.log(message);
+            // Здесь можно добавить более красивую систему уведомлений
+        }
+        
+        // Закрытие меню при изменении размера окна
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768 && menuOverlay) {
+                // На десктопе скрываем оверлей
+                menuOverlay.classList.remove('active');
+            }
+            updateMenuIcon();
+        });
+        
+        // Закрытие меню при клике вне его области
+        document.addEventListener('click', function(e) {
+            if (isMenuOpen && 
+                dropdownMenu && 
+                !dropdownMenu.contains(e.target) && 
+                !menuToggleBtn.contains(e.target)) {
+                closeMenu();
+            }
+        });
+        
+        // Инициализация иконки
+        updateMenuIcon();
+    }
+    // =========== КОНЕЦ ЛОГИКИ МЕНЮ ===========
+    
     // Если есть промпт из URL, автоматически отправляем его
     if (initialPrompt) {
         setTimeout(() => {
@@ -345,114 +522,5 @@ document.addEventListener('DOMContentLoaded', function() {
                 mobileHeader.style.position = 'sticky';
             }
         });
-    }
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Элементы меню
-const menuToggleBtn = document.getElementById('menuToggleBtn');
-const dropdownMenu = document.getElementById('dropdownMenu');
-const menuOverlay = document.getElementById('menuOverlay');
-const menuItems = document.querySelectorAll('.menu-item');
-
-// Переменная для отслеживания состояния меню
-let isMenuOpen = false;
-
-// Функция открытия/закрытия меню
-function toggleMenu() {
-    isMenuOpen = !isMenuOpen;
-    dropdownMenu.classList.toggle('active');
-    
-    // На мобильных устройствах показываем оверлей
-    if (window.innerWidth <= 768) {
-        menuOverlay.classList.toggle('active');
-    }
-}
-
-// Функция закрытия меню
-function closeMenu() {
-    isMenuOpen = false;
-    dropdownMenu.classList.remove('active');
-    menuOverlay.classList.remove('active');
-}
-
-// Обработчики событий
-if (menuToggleBtn) {
-    menuToggleBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        toggleMenu();
-    });
-}
-
-// Закрытие меню при клике на оверлей
-if (menuOverlay) {
-    menuOverlay.addEventListener('click', closeMenu);
-}
-
-// Закрытие меню при клике на пункт меню
-menuItems.forEach(item => {
-    item.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const action = this.getAttribute('data-action');
-        
-        // Выполняем действие в зависимости от выбранного пункта
-        handleMenuAction(action);
-        
-        // Закрываем меню
-        closeMenu();
-    });
-});
-
-// Закрытие меню при клике вне его области
-document.addEventListener('click', function(e) {
-    if (isMenuOpen && !dropdownMenu.contains(e.target) && !menuToggleBtn.contains(e.target)) {
-        closeMenu();
-    }
-});
-
-// Обработка действий меню
-function handleMenuAction(action) {
-    switch(action) {
-        case 'thoughtful':
-            // Режим "Вдумчиво"
-            showNotification('Режим "Вдумчиво" активирован');
-            // Здесь можно добавить логику для изменения поведения ИИ
-            console.log('Режим "Вдумчиво" активирован');
-            break;
-            
-        case 'internet':
-            // Режим "Интернет"
-            showNotification('Режим "Интернет" активирован');
-            // Здесь можно добавить логику для поиска в интернете
-            console.log('Режим "Интернет" активирован');
-            break;
-            
-        case 'settings':
-            // Открытие настроек
-            showNotification('Настройки открыты');
-            // Здесь можно добавить открытие модального окна настроек
-            console.log('Настройки открыты');
-            break;
-    }
-}
-
-
-// Закрытие меню при изменении размера окна
-window.addEventListener('resize', function() {
-    if (window.innerWidth > 768) {
-        // На десктопе скрываем оверлей
-        menuOverlay.classList.remove('active');
     }
 });
