@@ -1034,7 +1034,7 @@ pre code {
 .rxc {
     display: block;
     unicode-bidi: isolate;
-}
+}  
 
 
 
@@ -1280,3 +1280,41 @@ pre code {
         display: block;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+/* Стиль для кнопки с выбранным режимом */
+.menu-toggle-btn.has-selection {
+    background: rgba(116, 51, 191, 0.1);
+    color: var(--primary);
+}
+
+.menu-toggle-btn.has-selection:hover {
+    background: rgba(116, 51, 191, 0.2);
+}
+
+/* Плавный переход для иконки */
+.menu-toggle-btn i {
+    transition: all 0.2s ease;
+}
+
+
+
+
+
+
+
+
+
+
+
+
