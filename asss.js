@@ -225,7 +225,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Добавляем обработчик для кнопки копирования
         const copyBtn = messageDiv.querySelector('.copy-button');
         copyBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
+            e.preventDefault(); // Предотвращаем поведение по умолчанию
+            e.stopPropagation(); // Останавливаем всплытие
+            
             copyTextToClipboard(text);
             
             // Анимация нажатия кнопки
@@ -249,6 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let longPressTimer;
             
             messageText.addEventListener('touchstart', function(e) {
+                e.preventDefault(); // Предотвращаем стандартное поведение
                 longPressTimer = setTimeout(() => {
                     copyTextToClipboard(text);
                     
@@ -260,11 +263,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 }, 500);
             });
             
-            messageText.addEventListener('touchend', function() {
+            messageText.addEventListener('touchend', function(e) {
+                e.preventDefault();
                 clearTimeout(longPressTimer);
             });
             
-            messageText.addEventListener('touchmove', function() {
+            messageText.addEventListener('touchmove', function(e) {
+                e.preventDefault();
                 clearTimeout(longPressTimer);
             });
         }
