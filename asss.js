@@ -2,6 +2,86 @@
 const urlParams = new URLSearchParams(window.location.search);
 const initialPrompt = urlParams.get('prompt');
 
+// Уведомление о копировании
+let copyNotificationTimeout = null;
+
+// Функция показа уведомления о копировании
+function showCopyNotification() {
+    // Удаляем старое уведомление если есть
+    const oldNotification = document.querySelector('.copy-notification');
+    if (oldNotification) {
+        oldNotification.remove();
+    }
+    
+    // Создаем новое уведомление
+    const notification = document.createElement('div');
+    notification.className = 'copy-notification show';
+    notification.innerHTML = `
+        <i class="fas fa-check-circle"></i>
+        <div class="copy-notification-content">Текст скопирован в буфер обмена</div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Очищаем предыдущий таймаут
+    if (copyNotificationTimeout) {
+        clearTimeout(copyNotificationTimeout);
+    }
+    
+    // Автоматически скрываем через 2 секунды
+    copyNotificationTimeout = setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 400);
+    }, 2000);
+}
+
+// Функция копирования текста
+function copyTextToClipboard(text) {
+    // Проверяем поддержку Clipboard API
+    if (navigator.clipboard && window.isSecureContext) {
+        // Современный метод
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                showCopyNotification();
+            })
+            .catch(err => {
+                console.error('Ошибка при копировании: ', err);
+                fallbackCopyTextToClipboard(text);
+            });
+    } else {
+        // Старый метод для совместимости
+        fallbackCopyTextToClipboard(text);
+    }
+}
+
+// Резервный метод копирования
+function fallbackCopyTextToClipboard(text) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.opacity = '0';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            showCopyNotification();
+        } else {
+            console.error('Не удалось скопировать текст');
+        }
+    } catch (err) {
+        console.error('Ошибка при копировании: ', err);
+    }
+    
+    document.body.removeChild(textArea);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const messagesContainer = document.getElementById('messages');
     const messageInput = document.getElementById('messageInput');
@@ -121,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1500 + Math.random() * 1000);
     }
     
-    // Add message to chat (ИСПРАВЛЕННАЯ ФУНКЦИЯ - БЕЗ АВАТАРКИ ПОЛЬЗОВАТЕЛЯ)
+    // ОБНОВЛЕННАЯ ФУНКЦИЯ addMessage с кнопкой копирования:
     function addMessage(text, isUser) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
@@ -129,6 +209,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const messageContent = `
             <div class="message-content">
                 <div class="message-text">${text}</div>
+                <button class="copy-button" title="Копировать текст">
+                    <i class="far fa-copy"></i>
+                </button>
             </div>
         `;
         
@@ -138,6 +221,54 @@ document.addEventListener('DOMContentLoaded', function() {
             `<div class="avatar bot-avatar"><i class="fas fa-brain"></i></div>${messageContent}`;
         
         messagesContainer.appendChild(messageDiv);
+        
+        // Добавляем обработчик для кнопки копирования
+        const copyBtn = messageDiv.querySelector('.copy-button');
+        copyBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            copyTextToClipboard(text);
+            
+            // Анимация нажатия кнопки
+            copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+            copyBtn.style.background = 'var(--primary)';
+            copyBtn.style.color = 'white';
+            copyBtn.style.borderColor = 'var(--primary)';
+            
+            // Возвращаем исходный вид через 1.5 секунды
+            setTimeout(() => {
+                copyBtn.innerHTML = '<i class="far fa-copy"></i>';
+                copyBtn.style.background = isUser ? 'rgba(116, 51, 191, 0.2)' : 'rgba(255, 255, 255, 0.9)';
+                copyBtn.style.color = isUser ? 'rgba(255, 255, 255, 0.9)' : 'var(--gray)';
+                copyBtn.style.borderColor = isUser ? 'rgba(255, 255, 255, 0.3)' : 'var(--border)';
+            }, 1500);
+        });
+        
+        // Для мобильных устройств добавляем обработчик долгого нажатия на сообщение
+        if (window.innerWidth <= 768) {
+            const messageText = messageDiv.querySelector('.message-text');
+            let longPressTimer;
+            
+            messageText.addEventListener('touchstart', function(e) {
+                longPressTimer = setTimeout(() => {
+                    copyTextToClipboard(text);
+                    
+                    // Визуальная обратная связь
+                    messageText.style.backgroundColor = isUser ? 'rgba(255, 255, 255, 0.1)' : 'rgba(116, 51, 191, 0.1)';
+                    setTimeout(() => {
+                        messageText.style.backgroundColor = '';
+                    }, 500);
+                }, 500);
+            });
+            
+            messageText.addEventListener('touchend', function() {
+                clearTimeout(longPressTimer);
+            });
+            
+            messageText.addEventListener('touchmove', function() {
+                clearTimeout(longPressTimer);
+            });
+        }
+        
         scrollToBottom();
     }
     
