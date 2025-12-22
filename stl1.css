@@ -1307,14 +1307,117 @@ pre code {
     transition: all 0.2s ease;
 }
 
+/* =========== ФУНКЦИОНАЛ КОПИРОВАНИЯ СООБЩЕНИЙ =========== */
 
+/* Стили для кнопки копирования в сообщениях */
+.copy-button {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--gray);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 2;
+    font-size: 12px;
+}
 
+.message-content:hover .copy-button {
+    opacity: 1;
+    visibility: visible;
+}
 
+.copy-button:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: scale(1.05);
+}
 
+/* Для сообщений пользователя */
+.user-message .copy-button {
+    background: rgba(116, 51, 191, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.9);
+}
 
+.user-message .copy-button:hover {
+    background: white;
+    color: var(--primary);
+    border-color: white;
+}
 
+/* Уведомление о копировании */
+.copy-notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: var(--primary);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(116, 51, 191, 0.4);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    max-width: 300px;
+    text-align: center;
+    pointer-events: none;
+}
 
+.copy-notification.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
 
+.copy-notification i {
+    font-size: 18px;
+}
 
+.copy-notification-content {
+    font-size: 14px;
+    font-weight: 500;
+}
 
+/* Для сообщений с кнопкой копирования */
+.message-content {
+    position: relative;
+    padding-right: 40px !important;
+    padding-bottom: 32px !important;
+}
 
+/* Убедимся, что текст сообщения не перекрывает кнопку копирования */
+.message-text {
+    padding-right: 0;
+}
+
+/* Позиционирование для мобильных */
+@media (max-width: 768px) {
+    .copy-button {
+        opacity: 1;
+        visibility: visible;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+    
+    .copy-notification {
+        top: 70px;
+        max-width: 90%;
+        font-size: 13px;
+        padding: 10px 20px;
+    }
+}
