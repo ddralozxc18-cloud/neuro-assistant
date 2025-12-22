@@ -1421,3 +1421,48 @@ pre code {
         padding: 10px 20px;
     }
 }
+
+
+
+
+/**/
+
+/* ФИКС ДЛЯ КНОПКИ КОПИРОВАНИЯ НА МОБИЛЬНЫХ */
+@media (max-width: 768px) {
+    .copy-button {
+        -webkit-tap-highlight-color: transparent !important;
+        -webkit-touch-callout: none !important;
+        -webkit-user-select: none !important;
+        user-select: none !important;
+        touch-action: manipulation !important;
+    }
+    
+    .copy-button:focus,
+    .copy-button:active {
+        outline: none !important;
+        box-shadow: none !important;
+        background: rgba(255, 255, 255, 0.8) !important;
+        color: var(--gray) !important;
+        border-color: var(--border) !important;
+    }
+}
+
+/* Убираем все стандартные эффекты фокуса для кнопок */
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button:focus {
+    outline: none;
+}
+
+/* Для iOS устройств */
+@media (hover: none) and (pointer: coarse) {
+    .copy-button {
+        cursor: default;
+    }
+    
+    input, textarea, button {
+        font-size: 16px; /* Предотвращает масштабирование на iOS */
+    }
+}
