@@ -209,7 +209,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const messageContent = `
             <div class="message-content">
                 <div class="message-text">${text}</div>
-                <button class="copy-button" title="Копировать текст">
+                <button class="copy-button" title="Копировать текст" tabindex="-1">
                     <i class="far fa-copy"></i>
                 </button>
             </div>
@@ -228,7 +228,13 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault(); // Предотвращаем поведение по умолчанию
             e.stopPropagation(); // Останавливаем всплытие
             
-            copyTextToClipboard(text);
+            // Блокируем фокус программно
+            copyBtn.blur();
+            
+            // Добавляем небольшую задержку для гарантии
+            setTimeout(() => {
+                copyTextToClipboard(text);
+            }, 10);
             
             // Анимация нажатия кнопки
             copyBtn.innerHTML = '<i class="fas fa-check"></i>';
@@ -251,7 +257,10 @@ document.addEventListener('DOMContentLoaded', function() {
             let longPressTimer;
             
             messageText.addEventListener('touchstart', function(e) {
-                e.preventDefault(); // Предотвращаем стандартное поведение
+                // Предотвращаем все стандартные действия
+                e.preventDefault();
+                e.stopPropagation();
+                
                 longPressTimer = setTimeout(() => {
                     copyTextToClipboard(text);
                     
@@ -265,11 +274,13 @@ document.addEventListener('DOMContentLoaded', function() {
             
             messageText.addEventListener('touchend', function(e) {
                 e.preventDefault();
+                e.stopPropagation();
                 clearTimeout(longPressTimer);
             });
             
             messageText.addEventListener('touchmove', function(e) {
                 e.preventDefault();
+                e.stopPropagation();
                 clearTimeout(longPressTimer);
             });
         }
@@ -658,5 +669,38 @@ document.addEventListener('DOMContentLoaded', function() {
                 mobileHeader.style.position = 'sticky';
             }
         });
+    }
+});
+
+// Дополнительный фикс для мобильных устройств
+window.addEventListener('load', function() {
+    // Предотвращаем фокус на кнопках копирования при загрузке
+    document.querySelectorAll('.copy-button').forEach(btn => {
+        btn.addEventListener('focus', function(e) {
+            e.preventDefault();
+            this.blur();
+        });
+        
+        btn.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            this.click();
+        });
+    });
+    
+    // Для iOS добавляем дополнительные обработчики
+    if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+        document.addEventListener('touchstart', function(e) {
+            // Если клик по кнопке копирования, предотвращаем стандартное поведение
+            if (e.target.closest('.copy-button')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        document.addEventListener('touchend', function(e) {
+            // Если клик по кнопке копирования, предотвращаем стандартное поведение
+            if (e.target.closest('.copy-button')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
     }
 });
