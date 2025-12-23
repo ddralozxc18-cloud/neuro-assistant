@@ -62,21 +62,23 @@ function copyTextToClipboard(text) {
 function fallbackCopyTextToClipboard(text) {
     const textArea = document.createElement('textarea');
     textArea.value = text;
-    textArea.style.position = 'fixed';
-    textArea.style.opacity = '0';
+    
+    // КРИТИЧНО для мобильных
+    textArea.setAttribute('readonly', '');
+    textArea.style.position = 'absolute';
+    textArea.style.left = '-9999px';
+    textArea.style.top = '-9999px';
+    
     document.body.appendChild(textArea);
-    textArea.focus();
+    
     textArea.select();
+    textArea.setSelectionRange(0, textArea.value.length);
     
     try {
-        const successful = document.execCommand('copy');
-        if (successful) {
-            showCopyNotification();
-        } else {
-            console.error('Не удалось скопировать текст');
-        }
+        document.execCommand('copy');
+        showCopyNotification();
     } catch (err) {
-        console.error('Ошибка при копировании: ', err);
+        console.error('Ошибка при копировании:', err);
     }
     
     document.body.removeChild(textArea);
