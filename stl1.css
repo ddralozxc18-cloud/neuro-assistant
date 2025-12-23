@@ -1358,7 +1358,7 @@ pre code {
 
 /* Уведомление о копировании */
 .copy-notification {
-    position: fixed;
+    /* position: fixed;
     top: 20px;
     left: 50%;
     transform: translateX(-50%) translateY(-100px);
@@ -1375,7 +1375,27 @@ pre code {
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     max-width: 300px;
     text-align: center;
+    pointer-events: none; */
+
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: #f9fafb;;
+    color: var(--primary);
+    padding: 12px 24px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px #140c1e66;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    max-width: 300px;
+    text-align: center;
     pointer-events: none;
+
 }
 
 .copy-notification.show {
