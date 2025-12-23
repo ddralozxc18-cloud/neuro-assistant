@@ -18,7 +18,7 @@ function showCopyNotification() {
     notification.className = 'copy-notification show';
     notification.innerHTML = `
         <i class="fas fa-check-circle"></i>
-        <div class="copy-notification-content">Текст скопирован в буфер обмена</div>
+        <div class="copy-notification-content">Текст скопирован</div>
     `;
     
     document.body.appendChild(notification);
