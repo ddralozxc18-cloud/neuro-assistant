@@ -657,3 +657,54 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const messages = document.getElementById("messages");
+    const scrollBtn = document.getElementById("scrollToBottomBtn");
+
+    if (!messages || !scrollBtn) return;
+
+    // Скролл вниз
+    const scrollToBottom = () => {
+        messages.scrollTo({
+            top: messages.scrollHeight,
+            behavior: "smooth"
+        });
+    };
+
+    // Проверка: мы внизу или нет
+    const checkScroll = () => {
+        const threshold = 120; // чувствительность
+        const isAtBottom =
+            messages.scrollHeight - messages.scrollTop - messages.clientHeight < threshold;
+
+        scrollBtn.classList.toggle("show", !isAtBottom);
+    };
+
+    // Клик по кнопке
+    scrollBtn.addEventListener("click", scrollToBottom);
+
+    // Следим за скроллом
+    messages.addEventListener("scroll", checkScroll);
+
+    // Автоскролл при новом сообщении
+    const observer = new MutationObserver(() => {
+        const isNearBottom =
+            messages.scrollHeight - messages.scrollTop - messages.clientHeight < 200;
+
+        if (isNearBottom) {
+            scrollToBottom();
+        } else {
+            checkScroll();
+        }
+    });
+
+    observer.observe(messages, {
+        childList: true,
+        subtree: true
+    });
+
+    // Инициализация
+    checkScroll();
+});
