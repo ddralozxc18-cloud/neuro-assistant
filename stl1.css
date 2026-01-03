@@ -1449,13 +1449,12 @@ pre code {
 .scroll-to-bottom-btn {
     position: fixed;
     right: 24px;
-    bottom: 96px;
+    bottom: 19%;
     width: 44px;
     height: 44px;
     border-radius: 50%;
 
     background: #ffffff;
-    /* border: 2px solid oklab(85.452% 0 -0.0001); */
     border: 2px solid var(--primary);
     color: var(--primary);
 
@@ -1480,18 +1479,6 @@ pre code {
     transform: translateY(0);
 }
 
-/* Hover */
-/* .scroll-to-bottom-btn:hover {
-    background: rgba(116, 51, 191, 0.08);
-    box-shadow: 0 8px 24px rgba(116, 51, 191, 0.35);
-    transform: translateY(0) scale(1.05);
-} */
-
-/* Активное нажатие */
-/* .scroll-to-bottom-btn:active {
-    transform: scale(0.95);
-} */
-
 /* Стрелка */
 .scroll-to-bottom-btn i {
     font-size: 18px;
@@ -1504,29 +1491,33 @@ pre code {
     transform: translateY(2px);
 }
 
-/* Мобилка */
-/* @media (max-width: 768px) {
-    .scroll-to-bottom-btn {
-        right: 16px;
-        bottom: 120px;
-        width: 40px;
-        height: 40px;
-        font-size: 16px;
-    }
-} */
 
-/* Мобильные стили */
+
+
+
+
+
+/* Добавляем анимацию для скрытия */
+.scroll-to-bottom-btn.hidden {
+    opacity: 0 !important;
+    transform: translateY(20px) !important;
+    pointer-events: none;
+}
+
 @media (max-width: 768px) {
     .scroll-to-bottom-btn {
-        bottom: 90px; /* Убедитесь, что не перекрывает поле ввода */
+        bottom: 15%; /* Убедитесь, что не перекрывает поле ввода */
         right: 15px;
-        width: 52px;
-        height: 52px;
-        z-index: 10001; /* Еще выше на мобильных */
+        width: 49px;
+        height: 49px;
+        z-index: 10001; /* Еще выше на мобильных 800*/
+        /* Плавное скрытие/показ */
+        transition: opacity 0.3s ease, transform 0.3s ease, display 0.3s ease;
     }
     
-    /* Убедитесь, что ничто не перекрывает кнопку */
-    .scroll-to-bottom-btn {
-        position: fixed !important;
+    /* Когда сайдбар открыт, полностью скрываем кнопку */
+    .sidebar.active ~ #scrollToBottomBtn,
+    .sidebar.active + #sidebarOverlay ~ #scrollToBottomBtn {
+        display: none !important;
     }
 }
