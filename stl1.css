@@ -1521,3 +1521,27 @@ pre code {
         display: none !important;
     }
 }
+
+
+
+
+
+
+
+@media (max-width: 375px) {
+    .scroll-to-bottom-btn {
+        bottom: 20%; /* Убедитесь, что не перекрывает поле ввода */
+        right: 15px;
+        width: 49px;
+        height: 49px;
+        z-index: 10001; /* Еще выше на мобильных 800*/
+        /* Плавное скрытие/показ */
+        transition: opacity 0.3s ease, transform 0.3s ease, display 0.3s ease;
+    }
+    
+    /* Когда сайдбар открыт, полностью скрываем кнопку */
+    .sidebar.active ~ #scrollToBottomBtn,
+    .sidebar.active + #sidebarOverlay ~ #scrollToBottomBtn {
+        display: none !important;
+    }
+}
