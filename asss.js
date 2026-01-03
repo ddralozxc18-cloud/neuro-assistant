@@ -659,11 +659,43 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+
+
+
+
+
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
     const messages = document.getElementById("messages");
     const scrollBtn = document.getElementById("scrollToBottomBtn");
 
     if (!messages || !scrollBtn) return;
+
+    // Убедимся, что кнопка всегда поверх всего на мобильных устройствах
+    function ensureButtonZIndex() {
+        if (window.innerWidth <= 768) {
+            scrollBtn.style.zIndex = '10001';
+            scrollBtn.style.position = 'fixed';
+            
+            // Проверяем, нет ли элементов с более высоким z-index
+            const highZIndexElements = document.querySelectorAll('[style*="z-index"]');
+            let maxZIndex = 0;
+            
+            highZIndexElements.forEach(el => {
+                const zIndex = parseInt(window.getComputedStyle(el).zIndex);
+                if (zIndex > maxZIndex) {
+                    maxZIndex = zIndex;
+                }
+            });
+            
+            // Устанавливаем z-index выше самого высокого найденного
+            if (maxZIndex > 10001) {
+                scrollBtn.style.zIndex = (maxZIndex + 1).toString();
+            }
+        }
+    }
 
     // Скролл вниз
     const scrollToBottom = () => {
@@ -707,4 +739,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Инициализация
     checkScroll();
+    ensureButtonZIndex();
+    
+    // Повторная проверка при изменении размера окна
+    window.addEventListener('resize', ensureButtonZIndex);
+    
+    // Также проверяем при открытии/закрытии сайдбара на мобильных
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+        const observerSidebar = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'class') {
+                    setTimeout(ensureButtonZIndex, 10);
+                }
+            });
+        });
+        
+        observerSidebar.observe(sidebar, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+    }
 });
