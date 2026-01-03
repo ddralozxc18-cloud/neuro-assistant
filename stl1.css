@@ -1471,7 +1471,7 @@ pre code {
     pointer-events: none;
     transform: translateY(10px);
     transition: all 0.25s ease;
-    z-index: 200;
+    z-index: 9999; /* КРИТИЧНО: должен быть выше всего */
 }
 
 .scroll-to-bottom-btn.show {
@@ -1505,12 +1505,28 @@ pre code {
 }
 
 /* Мобилка */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
     .scroll-to-bottom-btn {
         right: 16px;
         bottom: 120px;
         width: 40px;
         height: 40px;
         font-size: 16px;
+    }
+} */
+
+/* Мобильные стили */
+@media (max-width: 768px) {
+    .scroll-to-bottom-btn {
+        bottom: 90px; /* Убедитесь, что не перекрывает поле ввода */
+        right: 15px;
+        width: 52px;
+        height: 52px;
+        z-index: 10001; /* Еще выше на мобильных */
+    }
+    
+    /* Убедитесь, что ничто не перекрывает кнопку */
+    .scroll-to-bottom-btn {
+        position: fixed !important;
     }
 }
