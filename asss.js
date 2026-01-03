@@ -670,30 +670,19 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener("DOMContentLoaded", () => {
     const messages = document.getElementById("messages");
     const scrollBtn = document.getElementById("scrollToBottomBtn");
+    const sidebar = document.getElementById("sidebar");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
 
     if (!messages || !scrollBtn) return;
 
-    // Убедимся, что кнопка всегда поверх всего на мобильных устройствах
-    function ensureButtonZIndex() {
-        if (window.innerWidth <= 768) {
-            scrollBtn.style.zIndex = '10001';
-            scrollBtn.style.position = 'fixed';
-            
-            // Проверяем, нет ли элементов с более высоким z-index
-            const highZIndexElements = document.querySelectorAll('[style*="z-index"]');
-            let maxZIndex = 0;
-            
-            highZIndexElements.forEach(el => {
-                const zIndex = parseInt(window.getComputedStyle(el).zIndex);
-                if (zIndex > maxZIndex) {
-                    maxZIndex = zIndex;
-                }
-            });
-            
-            // Устанавливаем z-index выше самого высокого найденного
-            if (maxZIndex > 10001) {
-                scrollBtn.style.zIndex = (maxZIndex + 1).toString();
-            }
+    // Функция для скрытия/показа кнопки в зависимости от состояния сайдбара
+    function updateScrollButtonVisibility() {
+        if (window.innerWidth <= 768 && sidebar && sidebar.classList.contains('active')) {
+            // Сайдбар открыт на мобильных - скрываем кнопку
+            scrollBtn.style.display = 'none';
+        } else {
+            // Сайдбар закрыт или это десктоп - показываем кнопку
+            scrollBtn.style.display = 'flex';
         }
     }
 
@@ -707,11 +696,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Проверка: мы внизу или нет
     const checkScroll = () => {
-        const threshold = 120; // чувствительность
+        const threshold = 120;
         const isAtBottom =
             messages.scrollHeight - messages.scrollTop - messages.clientHeight < threshold;
 
-        scrollBtn.classList.toggle("show", !isAtBottom);
+        // Обновляем видимость кнопки
+        updateScrollButtonVisibility();
+        
+        // Показываем/скрываем кнопку в зависимости от положения скролла
+        if (!isAtBottom && scrollBtn.style.display !== 'none') {
+            scrollBtn.classList.add("show");
+        } else {
+            scrollBtn.classList.remove("show");
+        }
     };
 
     // Клик по кнопке
@@ -737,27 +734,38 @@ document.addEventListener("DOMContentLoaded", () => {
         subtree: true
     });
 
-    // Инициализация
-    checkScroll();
-    ensureButtonZIndex();
-    
-    // Повторная проверка при изменении размера окна
-    window.addEventListener('resize', ensureButtonZIndex);
-    
-    // Также проверяем при открытии/закрытии сайдбара на мобильных
-    const sidebar = document.getElementById('sidebar');
+    // Наблюдаем за изменениями сайдбара
     if (sidebar) {
-        const observerSidebar = new MutationObserver(function(mutations) {
+        const sidebarObserver = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
                 if (mutation.attributeName === 'class') {
-                    setTimeout(ensureButtonZIndex, 10);
+                    updateScrollButtonVisibility();
+                    checkScroll();
                 }
             });
         });
         
-        observerSidebar.observe(sidebar, {
+        sidebarObserver.observe(sidebar, {
             attributes: true,
             attributeFilter: ['class']
         });
     }
+
+    // Также обновляем при клике на оверлей сайдбара
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', function() {
+            setTimeout(updateScrollButtonVisibility, 10);
+            setTimeout(checkScroll, 10);
+        });
+    }
+
+    // Обновляем при изменении размера окна
+    window.addEventListener('resize', function() {
+        updateScrollButtonVisibility();
+        checkScroll();
+    });
+
+    // Инициализация
+    updateScrollButtonVisibility();
+    checkScroll();
 });
