@@ -671,17 +671,81 @@ document.addEventListener("DOMContentLoaded", () => {
     const messages = document.getElementById("messages");
     const scrollBtn = document.getElementById("scrollToBottomBtn");
     const sidebar = document.getElementById("sidebar");
-    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    const messageInput = document.getElementById("messageInput");
+    const inputContainer = document.querySelector('.input-container');
 
     if (!messages || !scrollBtn) return;
+
+    // Переменные для отслеживания состояния клавиатуры
+    let keyboardOpen = false;
+    let originalViewportHeight = window.innerHeight;
+    let resizeTimeout;
+
+    // Определяем, открыта ли клавиатура
+    function isKeyboardOpen() {
+        // Метод 1: Сравнение высоты окна
+        const currentViewportHeight = window.innerHeight;
+        const heightDifference = originalViewportHeight - currentViewportHeight;
+        
+        // Метод 2: Проверка активного элемента
+        const isInputFocused = document.activeElement === messageInput || 
+                              document.activeElement === document.querySelector('textarea') ||
+                              document.activeElement === document.querySelector('input');
+        
+        // Метод 3: Проверка на мобильных устройствах
+        const isMobile = window.innerWidth <= 768;
+        
+        // Если разница в высоте значительная и поле ввода в фокусе на мобильном устройстве
+        if (isMobile && isInputFocused && heightDifference > 100) {
+            return true;
+        }
+        
+        // Дополнительная проверка для iOS
+        if (isMobile && isInputFocused && currentViewportHeight < originalViewportHeight * 0.7) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    // Функция для проверки и обновления состояния клавиатуры
+    function checkKeyboardState() {
+        const wasKeyboardOpen = keyboardOpen;
+        keyboardOpen = isKeyboardOpen();
+        
+        if (keyboardOpen !== wasKeyboardOpen) {
+            updateScrollButtonForKeyboard();
+        }
+    }
+
+    // Функция для обновления кнопки при открытии/закрытии клавиатуры
+    function updateScrollButtonForKeyboard() {
+        if (window.innerWidth <= 768) { // Только для мобильных
+            if (keyboardOpen) {
+                // Клавиатура открыта - скрываем кнопку
+                scrollBtn.classList.add('keyboard-open');
+                scrollBtn.classList.remove('show');
+                scrollBtn.style.opacity = '0';
+                scrollBtn.style.pointerEvents = 'none';
+                scrollBtn.style.transform = 'translateY(20px)';
+            } else {
+                // Клавиатура закрыта - показываем кнопку если нужно
+                scrollBtn.classList.remove('keyboard-open');
+                scrollBtn.style.opacity = '';
+                scrollBtn.style.pointerEvents = '';
+                scrollBtn.style.transform = '';
+                
+                // Проверяем, нужно ли показывать кнопку скролла
+                checkScroll();
+            }
+        }
+    }
 
     // Функция для скрытия/показа кнопки в зависимости от состояния сайдбара
     function updateScrollButtonVisibility() {
         if (window.innerWidth <= 768 && sidebar && sidebar.classList.contains('active')) {
-            // Сайдбар открыт на мобильных - скрываем кнопку
             scrollBtn.style.display = 'none';
         } else {
-            // Сайдбар закрыт или это десктоп - показываем кнопку
             scrollBtn.style.display = 'flex';
         }
     }
@@ -692,6 +756,11 @@ document.addEventListener("DOMContentLoaded", () => {
             top: messages.scrollHeight,
             behavior: "smooth"
         });
+        
+        // Если клавиатура открыта, скрываем ее после скролла
+        if (keyboardOpen && messageInput) {
+            messageInput.blur();
+        }
     };
 
     // Проверка: мы внизу или нет
@@ -700,11 +769,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const isAtBottom =
             messages.scrollHeight - messages.scrollTop - messages.clientHeight < threshold;
 
-        // Обновляем видимость кнопки
         updateScrollButtonVisibility();
         
-        // Показываем/скрываем кнопку в зависимости от положения скролла
-        if (!isAtBottom && scrollBtn.style.display !== 'none') {
+        // Не показываем кнопку если клавиатура открыта
+        if (keyboardOpen) {
+            scrollBtn.classList.remove("show");
+            return;
+        }
+        
+        if (!isAtBottom && scrollBtn.style.display !== 'none' && !keyboardOpen) {
             scrollBtn.classList.add("show");
         } else {
             scrollBtn.classList.remove("show");
@@ -716,6 +789,55 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Следим за скроллом
     messages.addEventListener("scroll", checkScroll);
+
+    // Обработчики для определения открытия клавиатуры
+
+    // 1. Событие focus на поле ввода
+    if (messageInput) {
+        messageInput.addEventListener('focus', function() {
+            // Запоминаем оригинальную высоту при фокусе
+            originalViewportHeight = window.innerHeight;
+            
+            // Небольшая задержка для определения открытия клавиатуры
+            setTimeout(checkKeyboardState, 300);
+        });
+        
+        messageInput.addEventListener('blur', function() {
+            // Небольшая задержка для определения закрытия клавиатуры
+            setTimeout(checkKeyboardState, 100);
+        });
+    }
+
+    // 2. Отслеживание изменения размера окна (самый надежный метод для клавиатуры)
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(function() {
+            checkKeyboardState();
+            originalViewportHeight = window.innerHeight;
+        }, 100);
+    });
+
+    // 3. Отслеживание изменения высоты визуального viewport
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', function() {
+            checkKeyboardState();
+        });
+    }
+
+    // 4. Отслеживание касания экрана (для iOS)
+    document.addEventListener('touchstart', function() {
+        setTimeout(checkKeyboardState, 200);
+    });
+
+    // 5. Отслеживание изменения ориентации
+    window.addEventListener('orientationchange', function() {
+        setTimeout(function() {
+            originalViewportHeight = window.innerHeight;
+            checkKeyboardState();
+            updateScrollButtonVisibility();
+            checkScroll();
+        }, 500);
+    });
 
     // Автоскролл при новом сообщении
     const observer = new MutationObserver(() => {
@@ -751,21 +873,23 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Также обновляем при клике на оверлей сайдбара
-    if (sidebarOverlay) {
-        sidebarOverlay.addEventListener('click', function() {
-            setTimeout(updateScrollButtonVisibility, 10);
-            setTimeout(checkScroll, 10);
-        });
-    }
-
-    // Обновляем при изменении размера окна
-    window.addEventListener('resize', function() {
-        updateScrollButtonVisibility();
-        checkScroll();
-    });
-
     // Инициализация
+    originalViewportHeight = window.innerHeight;
     updateScrollButtonVisibility();
+    checkKeyboardState();
     checkScroll();
+    
+    // Периодическая проверка (на всякий случай)
+    setInterval(checkKeyboardState, 1000);
+    
+    // Также адаптируем при изменении видимости страницы
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            setTimeout(function() {
+                originalViewportHeight = window.innerHeight;
+                checkKeyboardState();
+                checkScroll();
+            }, 100);
+        }
+    });
 });
