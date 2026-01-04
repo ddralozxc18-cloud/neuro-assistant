@@ -1545,3 +1545,30 @@ pre code {
         display: none !important;
     }
 }
+
+
+
+
+
+
+
+/* Стили для состояния когда клавиатура открыта */
+.scroll-to-bottom-btn.keyboard-open {
+    display: none !important;
+    opacity: 0 !important;
+    transform: translateY(20px) !important;
+    pointer-events: none !important;
+    transition: all 0.2s ease !important;
+}
+
+/* Анимация для плавного скрытия/показа */
+.scroll-to-bottom-btn {
+    transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+}
+
+/* Для очень маленьких экранов с клавиатурой */
+@media (max-width: 768px) and (max-height: 400px) {
+    .scroll-to-bottom-btn {
+        display: none !important;
+    }
+}
