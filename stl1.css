@@ -78,17 +78,6 @@
 }
 /**/
 
-
-
-
-
-
-
-
-
-
-
-
 body {
     background-color: var(--light);
     color: #333;
@@ -102,11 +91,6 @@ body {
     font-size: 0.8rem;
     color: var(--gray);
 }
-
-/* .new-btn1 {
-    padding-left: auto;
-    padding-right: auto;
-} */
 
 /* Layout */
 .app {
@@ -127,8 +111,7 @@ body {
     overflow: hidden;
     position: relative;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-
-        align-items: center; 
+    align-items: center; 
 }
 
 .sidebar.collapsed {
@@ -160,13 +143,7 @@ body {
     padding: 8px;
 }
 
-/* .sidebar.collapsed .new-chat-btn {
-    padding: 12px;
-    justify-content: center;
-    margin-bottom: 20px;
-    border-radius: 8px;
-} */
- .sidebar.collapsed .new-chat-btn {
+.sidebar.collapsed .new-chat-btn {
     padding: 12px;
     justify-content: center;
     margin-bottom: 20px;
@@ -224,8 +201,6 @@ body {
     width: 100%;
     margin-bottom: 20px;
     padding: 8px 12px;
-
-
     align-self: center; /* центрирует только этот flex-элемент */
     margin-bottom: 20px;
 }
@@ -235,7 +210,6 @@ body {
     border-radius: 4px;
     object-fit: contain;
     mix-blend-mode: multiply;
-
     margin-bottom: 16px;
 }
 .logo-icon {
@@ -272,7 +246,6 @@ body {
     margin-left: auto; /* Центрируем кнопку */
     margin-right: auto;
 }
-
 
 .new-chat-btn:hover {
     background: var(--primary-dark);
@@ -396,7 +369,7 @@ body {
 }
 
 .chat-header {
-    padding: 16px 24px;
+    padding: 8px 24px;
     border-bottom: 1px solid var(--border);
     background: var(--light);
     display: flex;
@@ -448,8 +421,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    max-width: 800px;
-    margin: 0 auto;
     width: 100%;
 }
 
@@ -559,9 +530,13 @@ body {
 
 /* Поле ввода */
 .input-area {
-    padding: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    padding-top: 0px;
     background: var(--light); 
-    border-top: 1px solid var(--border);
+    /* border-top: 1px solid var(--border); */
+    border: none;
     position: sticky;
     bottom: 0;
 }
@@ -815,7 +790,6 @@ body {
         width: 100%;
         background: var(--light);
         padding: 12px 16px;
-        /* border-top: 1px solid var(--border); */
         border-top: none;
         z-index: 100;
         box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
@@ -931,11 +905,6 @@ body {
     .sidebar.collapsed {
         width: 60px;
     }
-
-    .messages {
-        max-width: 90%;
-        padding: 20px;
-    }
 }
 
 /* Десктоп */
@@ -1014,11 +983,9 @@ pre code {
 
 .pAI {
     color: var(--gray);
-
     user-select: none;
     text-align: center;
     background-color: var(--dsw-alias-bg-base);
-    /* color: var(--dsw-alias-label-tertiary); */
     width: var(--message-list-max-width);
     max-width: 100%;
     font-size: 11px;
@@ -1027,7 +994,6 @@ pre code {
     border-style: none;
     border-color: initial;
     border-image: initial;
-    /* margin: 0px; */
     margin-top: 15px;
     padding: 6px 0px;
 }
@@ -1036,21 +1002,6 @@ pre code {
     display: block;
     unicode-bidi: isolate;
 }  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* Стили для кнопки меню с тремя точками - теперь слева от скрепки */
 .menu-toggle-btn {
@@ -1282,17 +1233,6 @@ pre code {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
 /* Стиль для кнопки с выбранным режимом */
 .menu-toggle-btn.has-selection {
     background: rgba(116, 51, 191, 0.1);
@@ -1359,30 +1299,11 @@ pre code {
 
 /* Уведомление о копировании */
 .copy-notification {
-    /* position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%) translateY(-100px);
-    background: var(--primary);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 12px;
-    box-shadow: 0 8px 25px rgba(116, 51, 191, 0.4);
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    opacity: 0;
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    max-width: 300px;
-    text-align: center;
-    pointer-events: none; */
-
     position: fixed;
     top: 20px;
     left: 50%;
     transform: translateX(-50%) translateY(-100px);
-    background: #f9fafb;;
+    background: #f9fafb;
     color: var(--primary);
     padding: 12px 24px;
     border-radius: 12px;
@@ -1396,7 +1317,6 @@ pre code {
     max-width: 300px;
     text-align: center;
     pointer-events: none;
-
 }
 
 .copy-notification.show {
@@ -1443,9 +1363,8 @@ pre code {
     }
 }
 
-/* =========== КНОПКА SCROLL TO BOTTOM - ИСПРАВЛЕННАЯ ДЛЯ МОБИЛКИ =========== */
+/* =========== КНОПКА SCROLL TO BOTTOM =========== */
 
-/* ===== Scroll to bottom button (white style) ===== */
 .scroll-to-bottom-btn {
     position: fixed;
     right: 22%;
@@ -1453,24 +1372,20 @@ pre code {
     width: 44px;
     height: 44px;
     border-radius: 50%;
-
     background: #ffffff;
     border: 2px solid var(--primary);
     color: var(--primary);
-
     cursor: pointer;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     font-size: 18px;
     opacity: 0;
     pointer-events: none;
     transform: translateY(10px);
     transition: all 0.25s ease;
-    z-index: 9999; /* КРИТИЧНО: должен быть выше всего */
+    z-index: 9999;
 }
 
 .scroll-to-bottom-btn.show {
@@ -1479,25 +1394,16 @@ pre code {
     transform: translateY(0);
 }
 
-/* Стрелка */
 .scroll-to-bottom-btn i {
     font-size: 18px;
     color: var(--primary);
     transition: transform 0.2s ease;
 }
 
-/* Микро-анимация */
 .scroll-to-bottom-btn:hover i {
     transform: translateY(2px);
 }
 
-
-
-
-
-
-
-/* Добавляем анимацию для скрытия */
 .scroll-to-bottom-btn.hidden {
     opacity: 0 !important;
     transform: translateY(20px) !important;
@@ -1506,53 +1412,36 @@ pre code {
 
 @media (max-width: 768px) {
     .scroll-to-bottom-btn {
-        bottom: 15%; /* Убедитесь, что не перекрывает поле ввода */
+        bottom: 15%;
         right: 15px;
         width: 49px;
         height: 49px;
-        z-index: 10001; /* Еще выше на мобильных 800*/
-        /* Плавное скрытие/показ */
+        z-index: 10001;
         transition: opacity 0.3s ease, transform 0.3s ease, display 0.3s ease;
     }
     
-    /* Когда сайдбар открыт, полностью скрываем кнопку */
     .sidebar.active ~ #scrollToBottomBtn,
     .sidebar.active + #sidebarOverlay ~ #scrollToBottomBtn {
         display: none !important;
     }
 }
-
-
-
-
-
-
 
 @media (max-width: 375px) {
     .scroll-to-bottom-btn {
-        bottom: 20%; /* Убедитесь, что не перекрывает поле ввода */
+        bottom: 20%;
         right: 15px;
         width: 49px;
         height: 49px;
-        z-index: 10001; /* Еще выше на мобильных 800*/
-        /* Плавное скрытие/показ */
+        z-index: 10001;
         transition: opacity 0.3s ease, transform 0.3s ease, display 0.3s ease;
     }
     
-    /* Когда сайдбар открыт, полностью скрываем кнопку */
     .sidebar.active ~ #scrollToBottomBtn,
     .sidebar.active + #sidebarOverlay ~ #scrollToBottomBtn {
         display: none !important;
     }
 }
 
-
-
-
-
-
-
-/* Стили для состояния когда клавиатура открыта */
 .scroll-to-bottom-btn.keyboard-open {
     display: none !important;
     opacity: 0 !important;
@@ -1561,12 +1450,10 @@ pre code {
     transition: all 0.2s ease !important;
 }
 
-/* Анимация для плавного скрытия/показа */
 .scroll-to-bottom-btn {
     transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
 }
 
-/* Для очень маленьких экранов с клавиатурой */
 @media (max-width: 768px) and (max-height: 400px) {
     .scroll-to-bottom-btn {
         display: none !important;
@@ -1575,11 +1462,9 @@ pre code {
 
 /* ===== Медиазапросы для специфических разрешений ===== */
 
-/* Для разрешения 360×640 (часто на Samsung, Xiaomi и др.) */
 @media (max-width: 360px) {
     .scroll-to-bottom-btn {
         right: 12px;
-        /* bottom: 18%; */
         bottom: 1%;
         width: 42px;
         height: 42px;
@@ -1591,44 +1476,191 @@ pre code {
     }
 }
 
-/* Для разрешения 390×844 (iPhone 12/13/14 Pro) */
 @media (min-width: 390px) and (max-width: 414px) {
     .scroll-to-bottom-btn {
         right: 16px;
-        /* bottom: 16%; */
+        bottom: 1%;
         width: 46px;
         height: 46px;
-
-        bottom: 1%;
     }
 }
 
-/* Для разрешения 414×896 (iPhone XR, 11, Plus модели) */
 @media (min-width: 415px) and (max-width: 428px) {
     .scroll-to-bottom-btn {
         right: 18px;
-        /* bottom: 15%; */
-
         bottom: 1%;
         width: 48px;
         height: 48px;
     }
 }
 
-/* Для очень высоких экранов (выше 800px) */
 @media (min-height: 800px) and (max-width: 768px) {
     .scroll-to-bottom-btn {
-        /* bottom: 12%; */
         bottom: 1%;
     }
 }
 
-/* Для экранов с очень маленькой высотой */
 @media (max-height: 600px) and (max-width: 768px) {
     .scroll-to-bottom-btn {
-        /* bottom: 22%; */
         bottom: 1%; 
         width: 40px;
         height: 40px;
     }
-}               
+}
+
+/* =========== УБРАТЬ ПУСТОЕ ПРОСТРАНСТВО СПРАВА ОТ СООБЩЕНИЙ =========== */
+
+/* Для десктопа убираем ограничение ширины у сообщений */
+@media (min-width: 769px) {
+    .messages {
+        max-width: none !important;
+        margin: 0 !important;
+        padding-left: 24px;
+        padding-right: 24px;
+        width: 100%;
+    }
+    
+    /* Сообщения растягиваем на всю доступную ширину */
+    .message {
+        max-width: 100%;
+    }
+    
+    /* Контент сообщения делаем чуть шире */
+    .message-content {
+        max-width: 85%;
+    }
+}
+
+/* Для больших десктопов делаем боковые отступы побольше */
+@media (min-width: 1025px) {
+    .messages {
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+}
+
+/* Для очень широких экранов можно ограничить максимальную ширину,
+   но не центрировать жестко, а оставить адаптивность */
+@media (min-width: 1400px) {
+    .messages {
+        padding-left: calc((100% - 1200px) / 2);
+        padding-right: calc((100% - 1200px) / 2);
+    }
+}
+
+/* На мобильных оставляем как есть (там и так width: 100%) */
+@media (max-width: 768px) {
+    .messages {
+        max-width: 100%;
+        margin: 0;
+    }
+}
+
+/* =========== СЖАТЬ ФИОЛЕТОВЫЕ СООБЩЕНИЯ, УБРАТЬ ПУСТОТУ СПРАВА =========== */
+@media (min-width: 769px) {
+    .user-message .message-content {
+        max-width: 680px; /* вместо 85% — фиксированная ширина, чуть меньше 800px */
+    }
+    
+    .bot-message .message-content {
+        max-width: 680px; /* чтобы и бот-сообщения были одинаково узкими */
+    }
+}
+
+/* Для планшетов — чуть меньше */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .user-message .message-content,
+    .bot-message .message-content {
+        max-width: 600px;
+    }
+}
+
+/* На мобильных — оставляем 90%, как есть */
+@media (max-width: 768px) {
+    .user-message .message-content,
+    .bot-message .message-content {
+        max-width: 90%;
+    }
+}
+
+/* Альтернативный вариант: адаптивная ширина с отступами */
+@media (min-width: 1400px) {
+    .user-message .message-content,
+    .bot-message .message-content {
+        max-width: 750px; /* чуть больше на очень широких экранах */
+    }
+}
+
+
+
+
+/* =========== ФИКС СОХРАНЕНИЯ СОСТОЯНИЯ САЙДБАРА =========== */
+
+/* На мобильных устройствах игнорируем свернутое состояние */
+@media (max-width: 768px) {
+    /* Принудительно показываем сайдбар развернутым на мобильных */
+    .sidebar.collapsed {
+        width: 85% !important;
+        padding: 12px !important;
+        left: 0 !important;
+        position: fixed !important;
+        z-index: 1000 !important;
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Показываем все текстовые элементы в свернутом сайдбаре на мобильных */
+    .sidebar.collapsed .logo-text,
+    .sidebar.collapsed .new-chat-btn span,
+    .sidebar.collapsed .section-title,
+    .sidebar.collapsed .action-btn span,
+    .sidebar.collapsed .example-title,
+    .sidebar.collapsed .example-desc {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    
+    .sidebar.collapsed .logo {
+        justify-content: flex-start !important;
+        margin-bottom: 20px !important;
+        padding: 8px 12px !important;
+    }
+    
+    .sidebar.collapsed .new-chat-btn {
+        padding: 12px 16px !important;
+        justify-content: flex-start !important;
+        margin-bottom: 16px !important;
+        border-radius: 10px !important;
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    
+    .sidebar.collapsed .action-btn {
+        padding: 10px 12px !important;
+        justify-content: flex-start !important;
+    }
+    
+    .sidebar.collapsed .example-card {
+        padding: 12px !important;
+        text-align: left !important;
+    }
+    
+    /* Скрываем кнопку свертывания на мобильных */
+    .sidebar-bottom {
+        display: none !important;
+    }
+    
+    /* Кнопка toggle-sidebar должна быть скрыта на мобильных */
+    .toggle-sidebar {
+        display: none !important;
+    }
+}
+
+/* Скрываем кнопку свертывания на мобильных в любом случае */
+@media (max-width: 768px) {
+    .toggle-sidebar,
+    .sidebar-bottom {
+        display: none !important;
+    }
+}
