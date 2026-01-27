@@ -1,3 +1,10 @@
+// Определяем, мобильное ли устройство
+function isMobile() {
+    return window.innerWidth <= 768;
+}
+
+// =========== ОСНОВНОЙ КОД ===========
+
 // Получаем промпт из URL параметров
 const urlParams = new URLSearchParams(window.location.search);
 const initialPrompt = urlParams.get('prompt');
@@ -98,18 +105,66 @@ document.addEventListener('DOMContentLoaded', function() {
     const sidebarOverlay = document.getElementById('sidebarOverlay');
     const mobileHeader = document.getElementById('mobileHeader');
 
-    // Элементы меню (перемещены внутрь DOMContentLoaded)
+    // Элементы меню
     const menuToggleBtn = document.getElementById('menuToggleBtn');
     const dropdownMenu = document.getElementById('dropdownMenu');
     const menuOverlay = document.getElementById('menuOverlay');
     const menuItems = document.querySelectorAll('.menu-item');
 
-    // Функция переключения боковой панели (десктоп)
+    // =========== ФИКС СОХРАНЕНИЯ СОСТОЯНИЯ САЙДБАРА ===========
+    
+    // 1. Убираем collapsed-класс на мобильных при загрузке
+    if (isMobile()) {
+        console.log('Мобильное устройство: удаляем класс collapsed с сайдбара');
+        if (sidebar) {
+            sidebar.classList.remove('collapsed');
+            // Также убираем expanded у main если он есть
+            if (main) {
+                main.classList.remove('expanded');
+            }
+        }
+    } else {
+        // 2. На десктопе восстанавливаем состояние из localStorage
+        console.log('Десктоп: восстанавливаем состояние сайдбара');
+        const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+        if (sidebarCollapsed && sidebar) {
+            sidebar.classList.add('collapsed');
+            if (main) {
+                main.classList.add('expanded');
+            }
+        } else if (sidebar) {
+            sidebar.classList.remove('collapsed');
+            if (main) {
+                main.classList.remove('expanded');
+            }
+        }
+    }
+
+    // Функция переключения боковой панели (ТОЛЬКО для десктопа)
     function toggleSidebar() {
+        // Если это мобильное устройство, игнорируем
+        if (isMobile()) {
+            console.log('Мобильное устройство: игнорируем переключение сайдбара');
+            return;
+        }
+        
         sidebar.classList.toggle('collapsed');
-        main.classList.toggle('expanded');
+        if (main) {
+            main.classList.toggle('expanded');
+        }
         const isCollapsed = sidebar.classList.contains('collapsed');
         localStorage.setItem('sidebarCollapsed', isCollapsed);
+        console.log('Десктоп: состояние сайдбара сохранено:', isCollapsed ? 'свернут' : 'развернут');
+    }
+
+    // Обработчик для десктопной кнопки переключения
+    if (toggleSidebarBtn) {
+        toggleSidebarBtn.addEventListener('click', toggleSidebar);
+        
+        // Скрываем кнопку на мобильных
+        if (isMobile()) {
+            toggleSidebarBtn.style.display = 'none';
+        }
     }
 
     // Функция открытия/закрытия мобильного меню
@@ -119,6 +174,14 @@ document.addEventListener('DOMContentLoaded', function() {
             sidebarOverlay.classList.toggle('active');
         }
         document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+        
+        // На мобильных всегда удаляем класс collapsed при открытии меню
+        if (isMobile()) {
+            sidebar.classList.remove('collapsed');
+            if (main) {
+                main.classList.remove('expanded');
+            }
+        }
     }
 
     // Закрытие мобильного меню при клике на оверлей
@@ -146,7 +209,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 messageInput.focus();
                 
                 // Закрываем меню на мобильных после создания нового чата
-                if (window.innerWidth <= 768) {
+                if (isMobile()) {
                     sidebar.classList.remove('active');
                     if (sidebarOverlay) {
                         sidebarOverlay.classList.remove('active');
@@ -157,18 +220,51 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Восстанавливаем состояние панели из localStorage
-    const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
-    if (sidebarCollapsed && window.innerWidth > 768) {
-        sidebar.classList.add('collapsed');
-        main.classList.add('expanded');
-    }
+    // Обработчик изменения размера окна - обновляем состояние сайдбара
+    window.addEventListener('resize', function() {
+        // При переходе с десктопа на мобильный
+        if (isMobile()) {
+            console.log('Перешли на мобильный режим: удаляем collapsed');
+            if (sidebar) {
+                sidebar.classList.remove('collapsed');
+                sidebar.classList.remove('active'); // Закрываем если было открыто
+            }
+            if (main) {
+                main.classList.remove('expanded');
+            }
+            if (sidebarOverlay) {
+                sidebarOverlay.classList.remove('active');
+            }
+            document.body.style.overflow = '';
+            
+            // Скрываем кнопку toggle если она есть
+            if (toggleSidebarBtn) {
+                toggleSidebarBtn.style.display = 'none';
+            }
+        } else {
+            // При переходе на десктоп - показываем кнопку toggle
+            if (toggleSidebarBtn) {
+                toggleSidebarBtn.style.display = 'flex';
+            }
+            
+            // Восстанавливаем состояние из localStorage
+            const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            if (sidebarCollapsed && sidebar) {
+                sidebar.classList.add('collapsed');
+                if (main) {
+                    main.classList.add('expanded');
+                }
+            } else if (sidebar) {
+                sidebar.classList.remove('collapsed');
+                if (main) {
+                    main.classList.remove('expanded');
+                }
+            }
+        }
+    });
 
-    // Обработчик для десктопной кнопки переключения
-    if (toggleSidebarBtn) {
-        toggleSidebarBtn.addEventListener('click', toggleSidebar);
-    }
-
+    // =========== КОНЕЦ ФИКСА СОХРАНЕНИЯ СОСТОЯНИЯ ===========
+    
     // Auto-resize textarea
     messageInput.addEventListener('input', function() {
         this.style.height = 'auto';
@@ -203,7 +299,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1500 + Math.random() * 1000);
     }
     
-    // ОБНОВЛЕННАЯ ФУНКЦИЯ addMessage с кнопкой копирования:
+    // Функция addMessage с кнопкой копирования
     function addMessage(text, isUser) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
@@ -217,7 +313,6 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         
-        // Для пользователя - только текст, для бота - аватарка + текст
         messageDiv.innerHTML = isUser ? 
             messageContent : 
             `<div class="avatar bot-avatar"><i class="fas fa-brain"></i></div>${messageContent}`;
@@ -236,7 +331,6 @@ document.addEventListener('DOMContentLoaded', function() {
             copyBtn.style.color = 'white';
             copyBtn.style.borderColor = 'var(--primary)';
             
-            // Возвращаем исходный вид через 1.5 секунды
             setTimeout(() => {
                 copyBtn.innerHTML = '<i class="far fa-copy"></i>';
                 copyBtn.style.background = isUser ? 'rgba(116, 51, 191, 0.2)' : 'rgba(255, 255, 255, 0.9)';
@@ -245,8 +339,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 1500);
         });
         
-        // Для мобильных устройств добавляем обработчик долгого нажатия на сообщение
-        if (window.innerWidth <= 768) {
+        // Для мобильных устройств добавляем обработчик долгого нажатия
+        if (isMobile()) {
             const messageText = messageDiv.querySelector('.message-text');
             let longPressTimer;
             
@@ -254,7 +348,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 longPressTimer = setTimeout(() => {
                     copyTextToClipboard(text);
                     
-                    // Визуальная обратная связь
                     messageText.style.backgroundColor = isUser ? 'rgba(255, 255, 255, 0.1)' : 'rgba(116, 51, 191, 0.1)';
                     setTimeout(() => {
                         messageText.style.backgroundColor = '';
@@ -306,12 +399,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         messagesContainer.scrollTop = maxScrollTop;
         
-        // Дополнительная проверка для мобильных
-        if (window.innerWidth <= 768) {
+        if (isMobile()) {
             setTimeout(() => {
                 messagesContainer.scrollTop = messagesContainer.scrollHeight + 80;
                 
-                // Двойная проверка для надежности
                 setTimeout(() => {
                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
                 }, 50);
@@ -338,8 +429,7 @@ document.addEventListener('DOMContentLoaded', function() {
             messageInput.style.height = 'auto';
             messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + 'px';
             
-            // Закрываем меню на мобильных после выбора примера
-            if (window.innerWidth <= 768) {
+            if (isMobile()) {
                 sidebar.classList.remove('active');
                 if (sidebarOverlay) {
                     sidebarOverlay.classList.remove('active');
@@ -359,8 +449,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             messageInput.focus();
             
-            // Закрываем меню на мобильных после создания нового чата
-            if (window.innerWidth <= 768) {
+            if (isMobile()) {
                 sidebar.classList.remove('active');
                 if (sidebarOverlay) {
                     sidebarOverlay.classList.remove('active');
@@ -377,8 +466,7 @@ document.addEventListener('DOMContentLoaded', function() {
             messageInput.value = action.toLowerCase() + '...';
             messageInput.focus();
             
-            // Закрываем меню на мобильных после выбора действия
-            if (window.innerWidth <= 768) {
+            if (isMobile()) {
                 sidebar.classList.remove('active');
                 if (sidebarOverlay) {
                     sidebarOverlay.classList.remove('active');
@@ -388,7 +476,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Обработка хинтов (подсказок)
+    // Обработка хинтов
     document.querySelectorAll('.hint').forEach(hint => {
         hint.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -396,14 +484,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const action = this.getAttribute('data-action');
             const isFileHint = this.classList.contains('file-hint');
             
-            // Для file-hint НЕ переключаем активное состояние
             if (!isFileHint) {
                 this.classList.toggle('active');
             }
             
             const isActive = this.classList.contains('active');
             
-            // Обрабатываем разные типы хинтов
             switch(action) {
                 case 'file':
                     console.log('Добавить файл clicked');
@@ -431,11 +517,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Обработчик для новой кнопки скрепки (внутри поля ввода)
+    // Обработчик для новой кнопки скрепки
     const attachButton = document.getElementById('attachButton');
     if (attachButton) {
         attachButton.addEventListener('click', function() {
-            // Логика для загрузки файла (такая же как у .file-hint)
             console.log('Добавить файл clicked (новая кнопка)');
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
@@ -443,7 +528,6 @@ document.addEventListener('DOMContentLoaded', function() {
             fileInput.addEventListener('change', function(e) {
                 if (this.files.length > 0) {
                     console.log('Выбран файл:', this.files[0].name);
-                    // Можно добавить отображение имени файла или его предпросмотр
                 }
             });
             document.body.appendChild(fileInput);
@@ -454,55 +538,44 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // =========== ЛОГИКА МЕНЮ С ИКОНКАМИ ===========
     
-    // Проверяем, существует ли кнопка меню
     if (menuToggleBtn) {
         const menuIcon = menuToggleBtn.querySelector('i');
         
-        // Состояние меню и выбранного режима
         let isMenuOpen = false;
-        let selectedMode = null; // 'thoughtful', 'internet', или null
+        let selectedMode = null;
         
-        // Иконки для разных состояний
         const icons = {
             ellipsis: 'fas fa-ellipsis-h',
             thoughtful: 'fas fa-brain',
-            internet: 'fas fa-wifi',
+            internet: 'fas fa-globe',
             close: 'fas fa-times'
         };
         
-        // Функция смены иконки
         function updateMenuIcon() {
             if (isMenuOpen) {
-                // Если меню открыто, показываем три точки
                 menuIcon.className = icons.ellipsis;
             } else if (selectedMode) {
-                // Если меню закрыто и выбран режим, показываем его иконку
                 menuIcon.className = icons[selectedMode];
             } else {
-                // По умолчанию - три точки
                 menuIcon.className = icons.ellipsis;
             }
             
-            // Добавляем/убираем класс для hover эффекта
             menuToggleBtn.classList.toggle('has-selection', selectedMode !== null);
         }
         
-        // Функция открытия/закрытия меню
         function toggleMenu() {
             isMenuOpen = !isMenuOpen;
             if (dropdownMenu) {
                 dropdownMenu.classList.toggle('active');
             }
             
-            // На мобильных устройствах показываем оверлей
-            if (window.innerWidth <= 768 && menuOverlay) {
+            if (isMobile() && menuOverlay) {
                 menuOverlay.classList.toggle('active');
             }
             
             updateMenuIcon();
         }
         
-        // Функция закрытия меню
         function closeMenu() {
             isMenuOpen = false;
             if (dropdownMenu) {
@@ -514,11 +587,9 @@ document.addEventListener('DOMContentLoaded', function() {
             updateMenuIcon();
         }
         
-        // Обработчики событий для кнопки меню
         menuToggleBtn.addEventListener('click', function(e) {
             e.stopPropagation();
             
-            // Если уже есть выбранный режим и меню закрыто, сбрасываем его
             if (selectedMode && !isMenuOpen) {
                 selectedMode = null;
                 updateMenuIcon();
@@ -530,7 +601,6 @@ document.addEventListener('DOMContentLoaded', function() {
             toggleMenu();
         });
         
-        // Обработчик hover для смены иконки на крестик
         menuToggleBtn.addEventListener('mouseenter', function() {
             if (selectedMode && !isMenuOpen) {
                 menuIcon.className = icons.close;
@@ -543,72 +613,58 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Для мобильных устройств используем touch события
         menuToggleBtn.addEventListener('touchstart', function() {
             if (selectedMode && !isMenuOpen) {
                 menuIcon.className = icons.close;
             }
         });
         
-        // Закрытие меню при клике на оверлей
         if (menuOverlay) {
             menuOverlay.addEventListener('click', closeMenu);
         }
         
-        // Закрытие меню при клике на пункт меню
         if (menuItems.length > 0) {
             menuItems.forEach(item => {
                 item.addEventListener('click', function(e) {
                     e.stopPropagation();
                     const action = this.getAttribute('data-action');
                     
-                    // Выполняем действие в зависимости от выбранного пункта
                     handleMenuAction(action);
                     
-                    // Устанавливаем выбранный режим
                     if (action === 'thoughtful' || action === 'internet') {
                         selectedMode = action;
                     }
                     
-                    // Закрываем меню
                     closeMenu();
                 });
             });
         }
         
-        // Обработка действий меню
         function handleMenuAction(action) {
             switch(action) {
                 case 'thoughtful':
-                    // Режим "Вдумчиво"
                     showNotification('Режим "Вдумчиво" активирован');
                     console.log('Режим "Вдумчиво" активирован');
                     break;
                     
                 case 'internet':
-                    // Режим "Поиск"
                     showNotification('Режим "Поиск" активирован');
                     console.log('Режим "Поиск" активирован');
                     break;
             }
         }
         
-        // Функция показа уведомления (упрощенная версия)
         function showNotification(message) {
             console.log(message);
-            // Здесь можно добавить более красивую систему уведомлений
         }
         
-        // Закрытие меню при изменении размера окна
         window.addEventListener('resize', function() {
-            if (window.innerWidth > 768 && menuOverlay) {
-                // На десктопе скрываем оверлей
+            if (!isMobile() && menuOverlay) {
                 menuOverlay.classList.remove('active');
             }
             updateMenuIcon();
         });
         
-        // Закрытие меню при клике вне его области
         document.addEventListener('click', function(e) {
             if (isMenuOpen && 
                 dropdownMenu && 
@@ -618,7 +674,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Инициализация иконки
         updateMenuIcon();
     }
     // =========== КОНЕЦ ЛОГИКИ МЕНЮ ===========
@@ -644,13 +699,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Дополнительная защита для мобильной верхней панели
-    if (window.innerWidth <= 768 && mobileHeader) {
-        // Убедимся, что верхняя панель всегда поверх контента
+    if (isMobile() && mobileHeader) {
         mobileHeader.style.zIndex = '1000';
         
-        // Добавляем обработчик скролла для дополнительной защиты
         messagesContainer.addEventListener('scroll', function() {
-            // Гарантируем, что верхняя панель всегда видна
             if (mobileHeader.style.position !== 'sticky') {
                 mobileHeader.style.position = 'sticky';
             }
@@ -658,23 +710,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-
-
-
-
-
-
-
-
-
+// =========== КОД ДЛЯ КНОПКИ SCROLL TO BOTTOM ===========
 document.addEventListener("DOMContentLoaded", () => {
     const messages = document.getElementById("messages");
     const scrollBtn = document.getElementById("scrollToBottomBtn");
     const sidebar = document.getElementById("sidebar");
     const messageInput = document.getElementById("messageInput");
-    const inputContainer = document.querySelector('.input-container');
 
     if (!messages || !scrollBtn) return;
+
+    // Определяем, мобильное ли устройство
+    function isMobileDevice() {
+        return window.innerWidth <= 768;
+    }
 
     // Переменные для отслеживания состояния клавиатуры
     let keyboardOpen = false;
@@ -683,25 +731,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Определяем, открыта ли клавиатура
     function isKeyboardOpen() {
-        // Метод 1: Сравнение высоты окна
         const currentViewportHeight = window.innerHeight;
         const heightDifference = originalViewportHeight - currentViewportHeight;
         
-        // Метод 2: Проверка активного элемента
         const isInputFocused = document.activeElement === messageInput || 
                               document.activeElement === document.querySelector('textarea') ||
                               document.activeElement === document.querySelector('input');
         
-        // Метод 3: Проверка на мобильных устройствах
-        const isMobile = window.innerWidth <= 768;
-        
-        // Если разница в высоте значительная и поле ввода в фокусе на мобильном устройстве
-        if (isMobile && isInputFocused && heightDifference > 100) {
+        if (isMobileDevice() && isInputFocused && heightDifference > 100) {
             return true;
         }
         
-        // Дополнительная проверка для iOS
-        if (isMobile && isInputFocused && currentViewportHeight < originalViewportHeight * 0.7) {
+        if (isMobileDevice() && isInputFocused && currentViewportHeight < originalViewportHeight * 0.7) {
             return true;
         }
         
@@ -720,22 +761,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Функция для обновления кнопки при открытии/закрытии клавиатуры
     function updateScrollButtonForKeyboard() {
-        if (window.innerWidth <= 768) { // Только для мобильных
+        if (isMobileDevice()) {
             if (keyboardOpen) {
-                // Клавиатура открыта - скрываем кнопку
                 scrollBtn.classList.add('keyboard-open');
                 scrollBtn.classList.remove('show');
                 scrollBtn.style.opacity = '0';
                 scrollBtn.style.pointerEvents = 'none';
                 scrollBtn.style.transform = 'translateY(20px)';
             } else {
-                // Клавиатура закрыта - показываем кнопку если нужно
                 scrollBtn.classList.remove('keyboard-open');
                 scrollBtn.style.opacity = '';
                 scrollBtn.style.pointerEvents = '';
                 scrollBtn.style.transform = '';
-                
-                // Проверяем, нужно ли показывать кнопку скролла
                 checkScroll();
             }
         }
@@ -743,7 +780,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Функция для скрытия/показа кнопки в зависимости от состояния сайдбара
     function updateScrollButtonVisibility() {
-        if (window.innerWidth <= 768 && sidebar && sidebar.classList.contains('active')) {
+        if (isMobileDevice() && sidebar && sidebar.classList.contains('active')) {
             scrollBtn.style.display = 'none';
         } else {
             scrollBtn.style.display = 'flex';
@@ -757,7 +794,6 @@ document.addEventListener("DOMContentLoaded", () => {
             behavior: "smooth"
         });
         
-        // Если клавиатура открыта, скрываем ее после скролла
         if (keyboardOpen && messageInput) {
             messageInput.blur();
         }
@@ -771,7 +807,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         updateScrollButtonVisibility();
         
-        // Не показываем кнопку если клавиатура открыта
         if (keyboardOpen) {
             scrollBtn.classList.remove("show");
             return;
@@ -791,45 +826,44 @@ document.addEventListener("DOMContentLoaded", () => {
     messages.addEventListener("scroll", checkScroll);
 
     // Обработчики для определения открытия клавиатуры
-
-    // 1. Событие focus на поле ввода
     if (messageInput) {
         messageInput.addEventListener('focus', function() {
-            // Запоминаем оригинальную высоту при фокусе
             originalViewportHeight = window.innerHeight;
-            
-            // Небольшая задержка для определения открытия клавиатуры
             setTimeout(checkKeyboardState, 300);
         });
         
         messageInput.addEventListener('blur', function() {
-            // Небольшая задержка для определения закрытия клавиатуры
             setTimeout(checkKeyboardState, 100);
         });
     }
 
-    // 2. Отслеживание изменения размера окна (самый надежный метод для клавиатуры)
+    // Отслеживание изменения размера окна
     window.addEventListener('resize', function() {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(function() {
             checkKeyboardState();
             originalViewportHeight = window.innerHeight;
+            
+            // При изменении размера окна также обновляем состояние сайдбара
+            if (isMobileDevice()) {
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar) {
+                    sidebar.classList.remove('collapsed');
+                }
+            }
         }, 100);
     });
 
-    // 3. Отслеживание изменения высоты визуального viewport
     if (window.visualViewport) {
         window.visualViewport.addEventListener('resize', function() {
             checkKeyboardState();
         });
     }
 
-    // 4. Отслеживание касания экрана (для iOS)
     document.addEventListener('touchstart', function() {
         setTimeout(checkKeyboardState, 200);
     });
 
-    // 5. Отслеживание изменения ориентации
     window.addEventListener('orientationchange', function() {
         setTimeout(function() {
             originalViewportHeight = window.innerHeight;
@@ -879,10 +913,8 @@ document.addEventListener("DOMContentLoaded", () => {
     checkKeyboardState();
     checkScroll();
     
-    // Периодическая проверка (на всякий случай)
     setInterval(checkKeyboardState, 1000);
     
-    // Также адаптируем при изменении видимости страницы
     document.addEventListener('visibilitychange', function() {
         if (!document.hidden) {
             setTimeout(function() {
