@@ -29,31 +29,71 @@
 
 
     <div class="app">
-        <!-- Sidebar -->
-        <div class="sidebar" id="sidebar">
-            <div class="logo">
-                <div class="logo-icon"><img src="ChatGPT Image 27 сент. 2025 г., 12_07_11.png" class="logo2"></div>
-            </div>
 
-                <button class="new-chat-btn" > <!-- data-tooltip="Новый чат" -->
-                    <i class="fas fa-plus"></i>
-                    <span>Новый чат</span>
-                </button>
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="logo">
+        <div class="logo-icon"><img src="ChatGPT Image 27 сент. 2025 г., 12_07_11.png" class="logo2"></div>
+    </div>
 
-            <hr class="hrhr">
+    <button class="new-chat-btn">
+        <i class="fas fa-plus"></i>
+        <span>Новый чат</span>
+    </button>
 
-            <!-- Кнопка сворачивания в самом низу sidebar -->
-            <div class="sidebar-bottom">
-                    <button class="toggle-sidebar" id="toggleSidebar">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-            </div>
+    <hr class="hrhr">
+
+    <!-- Мобильный аккаунт (показывается только на мобильных) -->
+    <div class="mobile-account" id="mobileAccountBtn">
+        <!-- Мобильный аккаунт — стили как у десктопа -->
+<!-- Мобильный аккаунт — стили как у десктопа -->
+<!-- Мобильная кнопка "Аккаунт" — стили как на ПК, без аватара -->
+<button class="mobile-account-btn mobile-only" id="mobileAccountBtn">
+    Аккаунт
+</button>
+        <div class="mobile-account-menu" id="mobileAccountMenu">
+            <button class="menu-item" data-action="settings">
+                <i class="fas fa-cog"></i>
+                <span>Настройки</span>
+            </button>
+            <div class="menu-divider"></div>
+            <button class="menu-item logout" data-action="logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Выход</span>
+            </button>
         </div>
+    </div>
+
+    <!-- Кнопка сворачивания в самом низу sidebar -->
+    <div class="sidebar-bottom">
+        <button class="toggle-sidebar" id="toggleSidebar">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+    </div>
+</div>
+
 
         <!-- Main Chat Area -->
         <div class="main" id="main">
             <div class="chat-header">
                 <div class="chat-title">Чат с НейроПомощником</div>
+
+<div class="accaunt" id="accountBtn">
+  <span>Аккаунт</span>
+  <div class="account-menu" id="accountMenu">
+    <button class="menu-item" data-action="settings">
+      <i class="fas fa-cog"></i>
+      <span>Настройки</span>
+    </button>
+    <div class="menu-divider"></div>
+    <button class="menu-item logout" data-action="logout">
+      <i class="fas fa-sign-out-alt"></i>
+      <span>Выход</span>
+    </button>
+  </div>
+</div>
+
+
                 <div class="qse">
                     <span>v. 0.00.01 (Пре-альфа)</span>
                 </div>
@@ -120,5 +160,318 @@
     <button class="scroll-to-bottom-btn" id="scrollToBottomBtn">
         <i class="fas fa-chevron-down"></i>
     </button>
+<!-- Модальное окно настроек — DeepSeek-style, ГОРИЗОНТАЛЬНЫЕ ВКЛАДКИ -->
+<div class="modal-overlay" id="settingsModalOverlay">
+    <div class="settings-modal deepseek-horizontal" id="settingsModal">
+        <!-- Заголовок -->
+        <div class="settings-header">
+            <h3>Настройки</h3>
+            <button class="close-settings-btn" id="closeSettingsBtn" aria-label="Закрыть">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Горизонтальные вкладки -->
+        <div class="settings-tabs">
+            <button class="tab-btn active" data-tab="general">
+                <i class="fas fa-cog"></i>
+                <span>Общее</span>
+            </button>
+            <button class="tab-btn" data-tab="profile">
+                <i class="fas fa-user"></i>
+                <span>Профиль</span>
+            </button>
+            <button class="tab-btn" data-tab="personalization">
+                <i class="fas fa-user-gear"></i>
+                <span>Персонализация</span>
+            </button>
+            <button class="tab-btn" data-tab="data">
+                <i class="fas fa-database"></i>
+                <span>Данные</span>
+            </button>
+            <button class="tab-btn" data-tab="about">
+                <i class="fas fa-info-circle"></i>
+                <span>О программе</span>
+            </button>
+        </div>
+
+        <!-- Контент с прокруткой -->
+        <div class="settings-content-wrapper">
+            <div class="settings-content" id="settingsContent">
+                <div class="tab-content active" data-tab="general">
+    <h4>Общие настройки</h4>
+    <!-- <p>Настройте внешний вид и язык интерфейса.</p> -->
+
+    <!-- Тема -->
+    <div class="setting-item">
+        <div style="flex: 1;">
+            <div class="setting-title">Тема интерфейса</div>
+            <div class="setting-desc">Выберите цветовую схему</div>
+        </div>
+        <select id="themeSelect" class="form-select" style="width: auto; min-width: 140px;">
+            <option value="light">Светлая</option>
+            <option value="dark">Тёмная</option>
+            <option value="system" selected>Системная</option>
+        </select>
+    </div>
+
+    <!-- Язык -->
+    <div class="setting-item">
+        <div style="flex: 1;">
+            <div class="setting-title">Язык интерфейса</div>
+            <div class="setting-desc">Выберите предпочитаемый язык</div>
+        </div>
+        <select id="languageSelect" class="form-select" style="width: auto; min-width: 140px;">
+            <option value="ru" selected>Русский</option>
+            <option value="en">English</option>
+            <option value="fr">Français</option>
+            <option value="ar">عربي</option>
+            <option value="zh">简体中文</option>
+            <option value="bn">বাংলা</option>
+            <option value="tg">Тоҷикӣ</option>
+            <option value="tk">Türkmenler</option>
+            <option value="kk">Қазақ</option>
+            <option value="uz">О'zbek</option>
+        </select>
+    </div>
+
+    <!-- Автопрокрутка (оставил, но можно убрать) -->
+    <div class="setting-item">
+        <label class="switch">
+            <input type="checkbox" checked>
+            <span class="slider"></span>
+        </label>
+        <div>
+            <div class="setting-title">Автопрокрутка</div>
+            <div class="setting-desc">Прокручивать чат вниз при новых сообщениях</div>
+        </div>
+    </div>
+        <button class="btn-danger full-width logout-btn" id="settingsLogoutBtn" style="margin-top: 24px;">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Выйти из аккаунта</span>
+    </button>
+</div>
+
+                <div class="tab-content" data-tab="profile">
+    <h4>Профиль</h4>
+    <!-- <p>Управляйте своей учётной записью.</p> -->
+
+    <!-- Имя -->
+    <div class="setting-item">
+        <div style="flex: 1;">
+            <div class="setting-title">Имя</div>
+            <input type="text" class="form-input" value="Пользователь" placeholder="Введите имя">
+        </div>
+    </div>
+
+    <!-- Email -->
+    <div class="setting-item">
+        <div style="flex: 1;">
+            <div class="setting-title">Адрес электронной почты</div>
+            <input type="email" class="form-input" value="user@example.com" readonly>
+        </div>
+    </div>
+
+    <!-- Телефон -->
+    <div class="setting-item">
+        <div style="flex: 1;">
+            <div class="setting-title">Телефон</div>
+            <input type="tel" class="form-input" placeholder="Добавить номер">
+        </div>
+    </div>
+
+        <div class="setting-item">
+        <div style="flex: 1;">
+            <div class="setting-title">Пароль</div>
+            <div style="display: flex; gap: 8px; margin-top: 6px;">
+                <input type="password" class="form-input1" value="••••••••" readonly style="flex: 1;">
+                <!-- <button class="btn-secondary" style="width: auto; padding: 8px 12px;">Изменить</button> -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Действия -->
+    <div class="profile-actions">
+        <button class="btn-secondary full-width">Редактировать</button>
+        <button class="btn-secondary full-width" style="margin-top: 8px;">Выйти со всех устройств</button>
+        <button class="btn-danger full-width" style="margin-top: 8px;">Удалить аккаунт</button>
+        <button class="btn-secondary full-width" style="margin-top: 8px;">Управлять подпиской</button>
+    </div>
+</div>
+
+                <div class="tab-content" data-tab="personalization">
+    <h4>Персонализация</h4>
+    <p>Настройте ИИ под ваш стиль обучения и уровень знаний.</p>
+
+    <!-- Уровень образования -->
+    <div class="setting-item">
+        <div style="flex: 1;">
+            <div class="setting-title">Уровень образования</div>
+            <select id="educationLevel" class="form-select">
+                <option value="school">Школьник</option>
+                <option value="college">Колледж</option>
+                <option value="university" selected>Университет</option>
+                <option value="other">Другое / Самообразование</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Класс (только если выбран "Школьник") -->
+    <div class="setting-item" id="gradeRow" style="display: none;">
+        <div style="flex: 1;">
+            <div class="setting-title">Класс</div>
+            <select id="schoolGrade" class="form-select">
+                <option value="1-4">1–4 класс</option>
+                <option value="5-7">5–7 класс</option>
+                <option value="8-9">8–9 класс</option>
+                <option value="10-11">10–11 класс</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Стиль объяснения -->
+    <div class="setting-item">
+        <div style="flex: 1;">
+            <div class="setting-title">Стиль объяснения</div>
+            <select id="explanationStyle" class="form-select">
+                <option value="detailed" selected>Разжёвывать</option>
+                <option value="balanced">Баланс</option>
+                <option value="concise">Кратко и по делу</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Темперамент (тон общения) -->
+    <div class="setting-item">
+        <div style="flex: 1;">
+            <div class="setting-title">Тон общения</div>
+            <select id="aiTone" class="form-select">
+                <option value="neutral" selected>Нейтральный</option>
+                <option value="encouraging">Подбадривающий</option>
+                <option value="strict">Строгий (как учитель)</option>
+                <option value="friendly">Дружелюбный</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Предметы (опционально) -->
+    <div class="setting-item">
+        <div style="flex: 1;">
+            <div class="setting-title">Мои предметы</div>
+            <div id="selectedSubjects" class="subject-tags" style="margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap; min-height: 24px;"></div>
+
+            <div style="margin-top: 16px;">
+                <div style="font-weight: 500; margin-bottom: 8px;">Выберите предметы:</div>
+
+                <!-- Школьные предметы -->
+                <div class="subject-group">
+                    <div style="font-weight: 600; color: #333; margin: 12px 0 6px;">Для школы (1–11 классы)</div>
+                    <div class="subject-checkboxes" id="schoolSubjects">
+                        <label class="subject-checkbox"><input type="checkbox" value="Русский язык"> Русский язык</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="Литература"> Литература</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="История"> История</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="Обществознание"> Обществознание</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="Английский"> Английский</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="Французский"> Французский</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="Немецкий"> Немецкий</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="Китайский"> Китайский</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="География"> География</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="Информатика"> Информатика</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="Математика"> Математика</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="Физика"> Физика</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="Биология"> Биология</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="Химия"> Химия</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="Изобразительное искусство"> Изобразительное искусство</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="Музыка"> Музыка</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="ОБЗР"> Основы безопасности и защиты Родины (ОБЗР)</label>
+                    </div>
+                </div>
+
+                <!-- Вузовские предметы -->
+                <div class="subject-group">
+                    <div style="font-weight: 600; color: #333; margin: 16px 0 6px;">Для университета</div>
+                    <div class="subject-checkboxes" id="universitySubjects">
+                        <label class="subject-checkbox"><input type="checkbox" value="История России"> История России</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="Основы российской государственности"> Основы российской государственности</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="Основы философии"> Основы философии</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="Культура речи"> Русский язык (культура речи)</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="БЖД"> Безопасность жизнедеятельности (БЖД)</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="Экономика"> Экономика</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="Робототехника и ИИ"> Робототехника и искусственный интеллект</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="Программирование"> Программирование</label>
+                        <label class="subject-checkbox"><input type="checkbox" value="Анализ данных"> Анализ данных (Data Science)</label>
+                        <!-- Языки и информатика уже есть выше, но можно оставить дубли для удобства -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Цель обучения -->
+    <div class="setting-item">
+        <label class="switch">
+            <input type="checkbox" id="examMode" checked>
+            <span class="slider"></span>
+        </label>
+        <div>
+            <div class="setting-title">Режим подготовки к экзаменам</div>
+            <div class="setting-desc">ИИ будет давать задачи, тесты и советы для ЕГЭ/ОГЭ/экзаменов</div>
+        </div>
+    </div>
+</div>
+
+                <div class="tab-content" data-tab="data">
+    <h4>Управление данными</h4>
+    <!-- <p>Контролируйте, как используются ваши данные.</p> -->
+
+    <!-- Переключатель для обучения модели -->
+    <div class="setting-item">
+        <label class="switch">
+            <input type="checkbox" id="allowTrainingData" checked>
+            <span class="slider"></span>
+        </label>
+        <div>
+            <div class="setting-title">Помогать улучшать ИИ</div>
+            <div class="setting-desc">Разрешить использовать ваш контент для обучения моделей и улучшения сервисов. Ваши данные остаются конфиденциальными.</div>
+        </div>
+    </div>
+
+    <!-- Остальные кнопки -->
+    <button class="btn-danger full-width">Очистить историю чатов</button>
+    <p class="text-muted">Это действие удалит все сообщения локально. Невозможно отменить.</p>
+    <button class="btn-secondary full-width" style="margin-top: 12px;">Экспортировать данные</button>
+</div>
+
+                <div class="tab-content" data-tab="about">
+    <h4>О программе</h4>
+    <p>ИИ-ассистент для обучения и решения задач. @@@@.</p>
+
+    <div class="about-links">
+        <a href="Terms_of_Use.html" target="_blank" class="about-link">Условия использования</a>
+        <a href="Privacy_Policy.html" target="_blank" class="about-link">Политика конфиденциальности</a>
+        <a href="User_Terms.html" target="_blank" class="about-link">Пользовательские условия</a>
+    </div>
+
+    <div class="about-section" style="margin-top: 24px;">
+        <div class="logo-small">
+            <img src="ChatGPT Image 27 сент. 2025 г., 12_07_11.png" alt="Логотип">
+        </div>
+        <div class="about-text">
+            <div class="app-name">НейроПомощник</div>
+            <div class="app-version">v. 0.00.01 (Пре-альфа)</div>
+            <div class="app-copyright">© 2026. Бла бла бла.</div>
+        </div>
+    </div>
+</div>
+            </div>
+        </div>
+
+        <!-- Футер -->
+        <div class="settings-footer">
+            <button class="btn-secondary" id="cancelSettingsBtn">Отмена</button>
+            <button class="btn-primary" id="saveSettingsBtn">Сохранить</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>
