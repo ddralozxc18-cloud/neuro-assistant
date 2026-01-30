@@ -1664,3 +1664,794 @@ pre code {
         display: none !important;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* .accaunt {
+    margin-right: auto;
+    margin-left: auto;
+
+    padding-bottom: auto;
+    padding-top: auto;
+
+    display: flex;
+
+    border-radius: 10px;
+    background-color: hsl(0, 0%, 73%);
+    width: 20%;
+    height: 90%;
+}
+
+.acc {
+    text-align: center;
+    font-size: 0.9rem;
+
+} */
+/* === Плашка аккаунта в шапке чата — десктопная версия === */
+.chat-header .accaunt {
+  background: var(--light-gray);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 6px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 90px;
+  height: 32px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gray);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+}
+
+/* .chat-header .accaunt:hover {
+  background: var(--primary-light);
+  color: white;
+  border-color: var(--primary-light);
+  box-shadow: 0 2px 6px rgba(116, 51, 191, 0.15);
+} */
+
+/* === Выпадающее меню аккаунта === */
+.chat-header .account-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: var(--light);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  min-width: 180px;
+  padding: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+}
+
+/* Показываем только когда есть класс .open на .accaunt */
+.chat-header .accaunt.open .account-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Элементы меню аккаунта */
+.chat-header .account-menu .menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #333;
+  font-size: 14px;
+  font-weight: 400;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+}
+
+.chat-header .account-menu .menu-item:hover {
+  background: var(--primary-light);
+  color: white;
+}
+
+.chat-header .account-menu .menu-item i {
+  font-size: 14px;
+  width: 16px;
+  opacity: 0.8;
+}
+
+.chat-header .account-menu .menu-item:hover i {
+  opacity: 1;
+}
+
+/* Красный цвет для "Выход" при наведении */
+.chat-header .account-menu .menu-item.logout:hover {
+  background: #ff4d4d;
+  color: white;
+}
+
+/* Разделитель */
+.chat-header .account-menu .menu-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 6px 0;
+}
+
+
+
+
+
+
+
+
+/* === DeepSeek-style Settings Modal — Horizontal Tabs (FINAL) === */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.settings-modal.deepseek-horizontal {
+    width: 800px;
+    max-width: 90vw;
+    height: 600px;
+    max-height: 90vh;
+    background: var(--light);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Заголовок */
+.settings-header {
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.settings-header h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #222;
+}
+
+.close-settings-btn {
+    background: transparent;
+    border: none;
+    color: var(--gray);
+    font-size: 20px;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-settings-btn:hover {
+    background: var(--light-gray);
+    color: #333;
+}
+
+/* Горизонтальные вкладки — КЛЮЧЕВОЕ ИЗМЕНЕНИЕ */
+.settings-tabs {
+    display: flex;
+    gap: 0;
+    padding: 0 24px;
+    background: #fafafa;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    overflow-x: auto;
+    scrollbar-width: none; /* Скрываем скроллбар в Firefox */
+}
+
+.settings-tabs::-webkit-scrollbar {
+    display: none; /* Скрываем скроллбар в Chrome/Safari */
+}
+
+.tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 20px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    font-size: 14px;
+    color: var(--gray);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+    color: #333;
+}
+
+.tab-btn.active {
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary);
+    font-weight: 500;
+}
+
+.tab-btn i {
+    font-size: 14px;
+    width: 16px;
+    text-align: center;
+}
+
+/* Контент с прокруткой — НИКАКОГО ПЕРЕКРЫТИЯ */
+.settings-content-wrapper {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* Плавная прокрутка на macOS/iOS */
+    min-width: 0; /* ← КРИТИЧНО: предотвращает overflow-x */
+}
+
+.settings-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0; /* ← КРИТИЧНО: для длинных слов */
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Общие стили контента */
+.settings-content h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 16px;
+    color: #222;
+}
+
+.setting-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 12px 0;
+}
+
+.setting-title {
+    font-weight: 500;
+    color: #222;
+}
+
+.setting-desc {
+    font-size: 13px;
+    color: var(--gray);
+    margin-top: 4px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 24px;
+    margin-top: 4px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .3s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary);
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+/* Профиль */
+.profile-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 16px 0;
+}
+
+.avatar-placeholder {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 24px;
+}
+
+.profile-name {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.profile-email {
+    font-size: 14px;
+    color: var(--gray);
+}
+
+/* О программе */
+.about-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 16px 0;
+}
+
+.logo-small img {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+}
+
+.app-name {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.app-version, .app-copyright {
+    font-size: 13px;
+    color: var(--gray);
+}
+
+/* Формы */
+.form-select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: white;
+    font-size: 14px;
+    margin-top: 6px;
+}
+
+/* Кнопки */
+.btn-secondary, .btn-primary, .btn-danger {
+    padding: 10px 16px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-secondary {
+    background: #f5f5f5;
+    color: #333;
+    border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+    background: #eaeaea;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+.btn-danger {
+    background: #ff4d4d;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #e60000;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.text-muted {
+    font-size: 13px;
+    color: var(--gray);
+    margin: 8px 0 0;
+}
+
+/* Футер */
+.settings-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+/* Поле ввода */
+.form-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: white;
+    font-size: 14px;
+    margin-top: 6px;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.form-input[readonly] {
+    background: #f9f9f9;
+    color: var(--gray);
+}
+
+/* === ФИНАЛЬНЫЙ ФИКС: переключатель .switch — гарантированно работает === */
+.setting-item .switch,
+.tab-content .switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 24px;
+    margin-top: 4px;
+    flex-shrink: 0;
+}
+
+.setting-item .switch input,
+.tab-content .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.setting-item .slider,
+.tab-content .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: all 0.3s ease;
+    border-radius: 24px;
+}
+
+.setting-item .slider:before,
+.tab-content .slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: all 0.3s ease;
+    border-radius: 50%;
+}
+
+.setting-item input:checked + .slider,
+.tab-content input:checked + .slider {
+    background-color: var(--primary);
+}
+
+.setting-item input:checked + .slider:before,
+.tab-content input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+/* Убедимся, что переключатель не сжимается */
+.setting-item > label.switch {
+    width: 48px;
+    height: 24px;
+}
+
+/* Ссылки в "О программе" */
+.about-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 16px 0;
+}
+
+.about-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 14px;
+    padding: 8px 0;
+    border-bottom: 1px solid transparent;
+    transition: all 0.2s ease;
+    width: fit-content;
+}
+
+.about-link:hover {
+    color: var(--primary-dark);
+    border-bottom-color: var(--primary);
+}
+
+.form-input1 {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: white;
+    font-size: 14px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+/* === Стили для тегов предметов === */
+.subject-tags .tag {
+    background: var(--primary);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.subject-tags .tag .remove {
+    cursor: pointer;
+    opacity: 0.8;
+    font-size: 12px;
+}
+
+.subject-tags .tag .remove:hover {
+    opacity: 1;
+}
+
+/* === Стили для флажков предметов === */
+.subject-checkboxes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.subject-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.subject-checkbox:hover {
+    background: #f9f9f9;
+}
+
+.subject-checkbox input[type="checkbox"] {
+    margin: 0;
+    width: 16px;
+    height: 16px;
+}
+
+
+/* === Мобильный аккаунт в сайдбаре === */
+.mobile-account {
+    margin-top: auto; /* прижимает к низу */
+    padding: 12px 16px;
+    position: relative;
+}
+
+.mobile-account .account-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text);
+    font-size: 14px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.mobile-account .account-info:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.mobile-account .account-info i {
+    color: var(--primary);
+    font-size: 18px;
+}
+
+/* Выпадающее меню (скрыто по умолчанию) */
+.mobile-account-menu {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 16px;
+    right: 16px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    z-index: 10;
+    border: 1px solid var(--border);
+}
+
+.mobile-account.open .mobile-account-menu {
+    display: block;
+}
+
+.mobile-account .menu-item {
+    width: 100%;
+    text-align: left;
+    padding: 12px 16px;
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mobile-account .menu-item:hover {
+    background: #f9f9f9;
+}
+
+.mobile-account .menu-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 4px 0;
+}
+
+/* Скрыть на десктопе */
+@media (min-width: 769px) {
+    .mobile-account {
+        display: none;
+    }
+}
+
+/* === Кнопка аккаунта — общий стиль (ПК + мобильная) === */
+.account-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 14px;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    transition: background 0.2s;
+}
+
+.account-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.account-btn i {
+    color: var(--primary);
+    font-size: 18px;
+    width: 20px;
+    text-align: center;
+}
+
+/* Скрыть на десктопе */
+@media (min-width: 769px) {
+    .mobile-only {
+        display: none !important;
+    }
+}
+
+/* === Кнопка "Аккаунт" в мобильном сайдбаре — как на ПК === */
+.mobile-account-btn {
+    background: var(--light-gray);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 6px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 90px;
+    height: 32px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    user-select: none;
+    width: auto;
+    margin: 0 auto; /* центрируем */
+}
+
+.mobile-account-btn:hover {
+    background: var(--primary-light);
+    color: white;
+    border-color: var(--primary-light);
+    box-shadow: 0 2px 6px rgba(116, 51, 191, 0.15);
+}
+
+/* Отключаем hover-эффекты на мобильных устройствах */
+@media (max-width: 768px) {
+    .account-btn:hover,
+    .mobile-account-btn:hover {
+        background: transparent !important;
+        color: var(--gray) !important;
+        border-color: var(--border) !important;
+        box-shadow: none !important;
+    }
+}
