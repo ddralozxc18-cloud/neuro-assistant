@@ -925,3 +925,213 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+
+
+
+
+
+
+
+
+
+
+// Обработка меню аккаунта
+document.querySelectorAll('.account-menu .menu-item').forEach(item => {
+  item.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const action = this.getAttribute('data-action');
+    
+    // switch(action) {
+    //   case 'logout':
+    //     if (confirm('Вы действительно хотите выйти?')) {
+    //       // Здесь можно очистить localStorage, перенаправить и т.д.
+    //       alert('Выход выполнен');
+    //     }
+    //     break;
+    //   case 'settings':
+    //     alert('Открываются настройки...');
+    //     break;
+    // }
+
+    // Закрываем меню (если используете клик вместо hover)
+    document.getElementById('accountMenu').classList.remove('active');
+  });
+});
+
+// Если хотите закрывать меню при клике вне его — добавьте:
+document.addEventListener('click', function(e) {
+  const accountDropdown = document.querySelector('.account-dropdown');
+  if (!accountDropdown.contains(e.target)) {
+    document.getElementById('accountMenu').classList.remove('active');
+  }
+});
+
+
+
+// === Меню аккаунта по клику ===
+const accountBtn = document.getElementById('accountBtn');
+const accountMenu = document.getElementById('accountMenu');
+
+if (accountBtn && accountMenu) {
+  accountBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    this.classList.toggle('open');
+  });
+
+  // Закрыть меню при клике вне его
+  document.addEventListener('click', function(e) {
+    if (!accountBtn.contains(e.target)) {
+      accountBtn.classList.remove('open');
+    }
+  });
+}
+
+
+// === Настройки: модальное окно ===
+const settingsModalOverlay = document.getElementById('settingsModalOverlay');
+const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+const cancelSettingsBtn = document.getElementById('cancelSettingsBtn');
+const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+
+// Открытие через меню аккаунта уже есть: data-action="settings"
+// Но нужно подключить его к новому модальному окну
+document.querySelectorAll('.menu-item[data-action="settings"]').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        settingsModalOverlay.classList.add('active');
+        // Закрываем меню аккаунта
+        const accountBtn = document.getElementById('accountBtn');
+        if (accountBtn) accountBtn.classList.remove('open');
+    });
+});
+
+// Закрытие модального окна
+function closeSettingsModal() {
+    settingsModalOverlay.classList.remove('active');
+}
+
+if (closeSettingsBtn) closeSettingsBtn.addEventListener('click', closeSettingsModal);
+if (cancelSettingsBtn) cancelSettingsBtn.addEventListener('click', closeSettingsModal);
+
+// Закрытие по клику на оверлей
+settingsModalOverlay.addEventListener('click', function(e) {
+    if (e.target === settingsModalOverlay) {
+        closeSettingsModal();
+    }
+});
+
+// Переключение вкладок
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const tabId = this.getAttribute('data-tab');
+        
+        // Убираем активный класс у всех
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        // Добавляем активный класс текущей вкладке и контенту
+        this.classList.add('active');
+        document.querySelector(`.tab-content[data-tab="${tabId}"]`).classList.add('active');
+    });
+});
+
+// Сохранение настроек (пример)
+if (saveSettingsBtn) {
+    saveSettingsBtn.addEventListener('click', function() {
+        // Здесь можно сохранить в localStorage или отправить на сервер
+        alert('Настройки сохранены!');
+        closeSettingsModal();
+    });
+}
+
+
+// Показ/скрытие поля "Класс" в зависимости от уровня образования
+const educationSelect = document.getElementById('educationLevel');
+const gradeRow = document.getElementById('gradeRow');
+
+if (educationSelect && gradeRow) {
+    educationSelect.addEventListener('change', function() {
+        gradeRow.style.display = this.value === 'school' ? 'flex' : 'none';
+    });
+
+    // Инициализация при загрузке
+    gradeRow.style.display = educationSelect.value === 'school' ? 'flex' : 'none';
+}
+
+
+
+
+
+
+
+
+
+// === Предметы: теги + флажки ===
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('.subject-checkbox input[type="checkbox"]');
+    const tagsContainer = document.getElementById('selectedSubjects');
+
+    // Восстановить из localStorage (опционально)
+    let selectedSubjects = JSON.parse(localStorage.getItem('selectedSubjects') || '[]');
+
+    // Инициализация
+    checkboxes.forEach(cb => {
+        if (selectedSubjects.includes(cb.value)) {
+            cb.checked = true;
+        }
+    });
+    updateSubjectTags();
+
+    // Обработчик кликов
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', function() {
+            if (this.checked) {
+                if (!selectedSubjects.includes(this.value)) {
+                    selectedSubjects.push(this.value);
+                }
+            } else {
+                selectedSubjects = selectedSubjects.filter(s => s !== this.value);
+            }
+            localStorage.setItem('selectedSubjects', JSON.stringify(selectedSubjects));
+            updateSubjectTags();
+        });
+    });
+
+    function updateSubjectTags() {
+        tagsContainer.innerHTML = '';
+        selectedSubjects.forEach(subject => {
+            const tag = document.createElement('div');
+            tag.className = 'tag';
+            tag.innerHTML = `
+                ${subject}
+                <span class="remove" data-subject="${subject}">×</span>
+            `;
+            tagsContainer.appendChild(tag);
+
+            // Удаление по крестику
+            tag.querySelector('.remove').addEventListener('click', function() {
+                const subj = this.getAttribute('data-subject');
+                selectedSubjects = selectedSubjects.filter(s => s !== subj);
+                localStorage.setItem('selectedSubjects', JSON.stringify(selectedSubjects));
+                document.querySelector(`input[value="${subj}"]`).checked = false;
+                updateSubjectTags();
+            });
+        });
+    }
+});
+
+
+
+
+
+
+
+// Открытие настроек по клику на мобильную кнопку "Аккаунт"
+const mobileAccountBtn = document.getElementById('mobileAccountBtn');
+if (mobileAccountBtn) {
+    mobileAccountBtn.addEventListener('click', function() {
+        document.getElementById('settingsModalOverlay').classList.add('active');
+    });
+}
+
